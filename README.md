@@ -1,3 +1,0 @@
-# Coming soon guys...
-
-### Source: startbootstrap.com
