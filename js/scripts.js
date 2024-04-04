@@ -68,6 +68,10 @@
     // Add an event listener for when the modal is hidden
     $('#portfolioModal1').on('hidden.bs.modal', function (e) {
     $('#portfolioModal2').on('hidden.bs.modal', function (e) {
+    $('#portfolioModal3').on('hidden.bs.modal', function (e) {
+    $('#portfolioModal4').on('hidden.bs.modal', function (e) {
+    $('#portfolioModal5').on('hidden.bs.modal', function (e) {
+    $('#portfolioModal6').on('hidden.bs.modal', function (e) {
         window.location.href = 'https://manishcrestha.com.np/';
     });
 
