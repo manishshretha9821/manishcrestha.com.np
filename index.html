@@ -52,7 +52,24 @@
 <body>
 
 
-<a href="http://instagram.com/Sai_Youth_Narayangarh">Always in His service.</a>
+
+
+<button onclick="downloadCV()" style="background-color: black; color: white; padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer;">Download CV</button>
+
+<script>
+  function downloadCV() {
+    var link = document.createElement('a');
+    link.href = 'https://drive.google.com/file/d/1XF1Ox9Kqyo6BQTO77QacQD1Uw70XJ0-U/view?usp=sharing';
+    link.setAttribute('target', '_blank');
+    link.setAttribute('download', 'My CV');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+</script>
+
+
+
 
 
 
@@ -244,7 +261,7 @@
 <body>
 
 
-<a href="mailto:info@manishcrestha.com.np">Email me here</a>
+<a href="mail:mail@manishcrestha.com.np">Email me here</a>
 
 
 
