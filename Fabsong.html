@@ -4,11 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blood Donor Database</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; padding: 10px; }
+        form { display: flex; flex-direction: column; align-items: center; max-width: 400px; margin: auto; }
+        label, input, select, button { width: 100%; margin-bottom: 10px; padding: 10px; font-size: 16px; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; display: none; }
         th, td { border: 1px solid black; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
+        .iti { width: 100%; }
+        @media (max-width: 600px) {
+            table, th, td { font-size: 14px; }
+        }
     </style>
 </head>
 <body>
@@ -16,10 +26,30 @@
     <form id="accessForm">
         <label for="name">Name:</label>
         <input type="text" id="name" required>
-        <label for="bloodgroup">Blood Group:</label>
-        <input type="text" id="bloodgroup" required>
+        <label for="userBloodgroup">Your Blood Group:</label>
+        <select id="userBloodgroup" required>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+        </select>
+        <label for="requiredBloodgroup">Required Blood Group:</label>
+        <select id="requiredBloodgroup" required>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+        </select>
         <label for="contact">Contact:</label>
-        <input type="text" id="contact" required>
+        <input type="tel" id="contact" required>
         <label for="location">Location:</label>
         <input type="text" id="location" required>
         <button type="submit">Submit</button>
@@ -33,43 +63,54 @@
                 <th>Contact</th>
             </tr>
         </thead>
-        <tbody id="donorData">
-            <!-- Donor data will be inserted here -->
-        </tbody>
+        <tbody id="donorData"></tbody>
     </table>
     
     <script>
-        document.getElementById("accessForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const name = document.getElementById("name").value.trim();
-            const bloodgroup = document.getElementById("bloodgroup").value.trim();
-            const contact = document.getElementById("contact").value.trim();
-            const location = document.getElementById("location").value.trim();
-            
-            if (name && bloodgroup && contact && location) {
-                document.getElementById("donorTable").style.display = "table";
-                loadDonorData();
-            } else {
-                alert("Please fill in all fields.");
-            }
+        const contactInput = document.querySelector("#contact");
+        const iti = window.intlTelInput(contactInput, {
+            initialCountry: "np",
+            separateDialCode: true,
+            preferredCountries: ["np", "in", "us"]
         });
 
-        function loadDonorData() {
-            const donors = [
-                { name: "Aashma Gyawali", bloodGroup: "B+", contact: "9844889262" },
-                { name: "Amrita Pokharel", bloodGroup: "B+", contact: "9867876156" },
-                { name: "Anisha Chhetri", bloodGroup: "O+", contact: "9809158777" },
-                { name: "Anjalika Sharma", bloodGroup: "O+", contact: "410478964" },
-                { name: "Anushuya Shrestha", bloodGroup: "A+", contact: "9821271687" }
-            ];
+        let donors = [
+            { name: "Aashma Gyawali", bloodGroup: "B+", contact: "9844889262" },
+            { name: "Amrita Pokharel", bloodGroup: "B+", contact: "9867876156" },
+            { name: "Anisha Chhetri", bloodGroup: "O+", contact: "9809158777" },
+            { name: "Anjalika Sharma", bloodGroup: "O+", contact: "410478964" },
+            { name: "Anushuya Shrestha", bloodGroup: "A+", contact: "9821271687" }
+        ];
 
+        document.getElementById("accessForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const userBloodgroup = document.getElementById("userBloodgroup").value;
+            const contact = document.getElementById("contact").value;
+            const location = document.getElementById("location").value;
+            const requiredBloodgroup = document.getElementById("requiredBloodgroup").value;
+            
+            donors.push({ name, bloodGroup: userBloodgroup, contact });
+            
+            document.getElementById("accessForm").style.display = "none";
+            document.getElementById("donorTable").style.display = "table";
+            loadDonorData(requiredBloodgroup);
+        });
+
+        function loadDonorData(requiredBloodgroup) {
             const donorData = document.getElementById("donorData");
             donorData.innerHTML = "";
-            donors.forEach(donor => {
-                const row = document.createElement("tr");
-                row.innerHTML = `<td>${donor.name}</td><td>${donor.bloodGroup}</td><td>${donor.contact}</td>`;
-                donorData.appendChild(row);
-            });
+            const filteredDonors = donors.filter(donor => donor.bloodGroup === requiredBloodgroup);
+            
+            if (filteredDonors.length === 0) {
+                donorData.innerHTML = `<tr><td colspan="3">No donors found for blood group ${requiredBloodgroup}</td></tr>`;
+            } else {
+                filteredDonors.forEach(donor => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `<td>${donor.name}</td><td>${donor.bloodGroup}</td><td>${donor.contact}</td>`;
+                    donorData.appendChild(row);
+                });
+            }
         }
     </script>
 </body>
