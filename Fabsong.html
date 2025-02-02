@@ -16,6 +16,7 @@
         th, td { border: 1px solid black; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
         .iti { width: 100%; }
+        .info-text { font-size: 14px; color: #555; margin-bottom: 10px; }
         @media (max-width: 600px) {
             table, th, td { font-size: 14px; }
         }
@@ -52,6 +53,10 @@
         <input type="tel" id="contact" required>
         <label for="location">Location:</label>
         <input type="text" id="location" required>
+        <label>
+            <input type="checkbox" id="agreeCheckbox" required> I agree
+            <span class="info-text">Your details will be saved upon entry and will be visible to others when you search for someone’s blood type.</span>
+        </label>
         <button type="submit">Submit</button>
     </form>
     
@@ -84,6 +89,11 @@
 
         document.getElementById("accessForm").addEventListener("submit", function(event) {
             event.preventDefault();
+            if (!document.getElementById("agreeCheckbox").checked) {
+                alert("You must agree to submit the form.");
+                return;
+            }
+            
             const name = document.getElementById("name").value;
             const userBloodgroup = document.getElementById("userBloodgroup").value;
             const contact = document.getElementById("contact").value;
