@@ -73,96 +73,58 @@
     </table>
     
     <script>
+        const webAppUrl = "https://script.google.com/macros/s/AKfycbxj3SzAJVs6G-j6FdNzMeHPOZ9DIvApntTAQgEE02cX2S6Y_61MJsjC5BOlJo1swfaL/exec"; // Replace with your actual Web App URL
+
         async function fetchDonorData() {
-            const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR-IYxPiKLhwEi3dOzyujqye1BsiTPQSP1o2Tm3IISsZQr5jGH9k8mC6is3ptk8nbhoAh8Z1L6fHAOO/pub?output=csv';
-            const response = await fetch(sheetUrl);
-            const data = await response.text();
-            const rows = data.split('\n').map(row => row.split(','));
-            return rows.slice(1).map(row => ({
-                name: row[0],
-                bloodGroup: row[1],
-                contact: row[2],
-                location: row[3]
-            }));
+            try {
+                const response = await fetch(webAppUrl);
+                const donors = await response.json();
+                return donors;
+            } catch (error) {
+                console.error("Error fetching donor data:", error);
+                return [];
+            }
         }
 
         document.getElementById("accessForm").addEventListener("submit", async function(event) {
             event.preventDefault();
+            
             if (!document.getElementById("agreeCheckbox").checked) {
                 alert("You must agree to submit the form.");
                 return;
             }
-            
+
+            // Get user input
+            const name = document.getElementById("name").value;
+            const userBloodgroup = document.getElementById("userBloodgroup").value;
+            const requiredBloodgroup = document.getElementById("requiredBloodgroup").value;
+            const contact = document.getElementById("contact").value;
+            const location = document.getElementById("location").value;
+
+            // Save user data to Google Sheet
+            const formData = new URLSearchParams({
+                name: name,
+                bloodGroup: userBloodgroup,
+                contact: contact,
+                location: location
+            });
+
+            try {
+                await fetch(webAppUrl, {
+                    method: "POST",
+                    body: formData
+                });
+                alert("Data submitted successfully!");
+            } catch (error) {
+                console.error("Error submitting data:", error);
+                alert("Failed to submit data.");
+            }
+
+            // Fetch and display required blood group donors
             document.getElementById("accessForm").style.display = "none";
             document.getElementById("donorTable").style.display = "table";
             
-            const requiredBloodgroup = document.getElementById("requiredBloodgroup").value;
-            const donors = await async function fetchDonorData() {
-    const webAppUrl = https://script.google.com/macros/s/AKfycbxj3SzAJVs6G-j6FdNzMeHPOZ9DIvApntTAQgEE02cX2S6Y_61MJsjC5BOlJo1swfaL/exec; // Replace with your actual Web App URL
-    try {
-        const response = await fetch(webAppUrl);
-        const donors = await response.json();
-        return donors;
-    } catch (error) {
-        console.error("Error fetching donor data:", error);
-        return [];
-    }
-}
-
-document.getElementById("accessForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-    
-    if (!document.getElementById("agreeCheckbox").checked) {
-        alert("You must agree to submit the form.");
-        return;
-    }
-
-    // Get user input
-    const name = document.getElementById("name").value;
-    const userBloodgroup = document.getElementById("userBloodgroup").value;
-    const requiredBloodgroup = document.getElementById("requiredBloodgroup").value;
-    const contact = document.getElementById("contact").value;
-    const location = document.getElementById("location").value;
-
-    // Save user data to Google Sheet
-    const webAppUrl = https://script.google.com/macros/s/AKfycbxj3SzAJVs6G-j6FdNzMeHPOZ9DIvApntTAQgEE02cX2S6Y_61MJsjC5BOlJo1swfaL/exec; // Replace with your actual Web App URL
-    const formData = new URLSearchParams({
-        name: name,
-        bloodGroup: userBloodgroup,
-        contact: contact,
-        location: location
-    });
-
-    try {
-        await fetch(webAppUrl, {
-            method: "POST",
-            body: formData
-        });
-    } catch (error) {
-        console.error("Error submitting data:", error);
-    }
-
-    // Fetch and display required blood group donors
-    document.getElementById("accessForm").style.display = "none";
-    document.getElementById("donorTable").style.display = "table";
-    
-    const donors = await fetchDonorData();
-    const donorData = document.getElementById("donorData");
-    donorData.innerHTML = "";
-    
-    const filteredDonors = donors.filter(donor => donor.bloodGroup.trim() === requiredBloodgroup);
-    
-    if (filteredDonors.length === 0) {
-        donorData.innerHTML = `<tr><td colspan="4">No donors found for blood group ${requiredBloodgroup}</td></tr>`;
-    } else {
-        filteredDonors.forEach(donor => {
-            const row = document.createElement("tr");
-            row.innerHTML = `<td>${donor.name}</td><td>${donor.bloodGroup}</td><td>${donor.contact}</td><td>${donor.location}</td>`;
-            donorData.appendChild(row);
-        });
-    }
-});
-;
+            const donors = await fetchDonorData();
             const donorData = document.getElementById("donorData");
             donorData.innerHTML = "";
             
