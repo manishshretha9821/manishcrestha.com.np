@@ -3,143 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Donor Database</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <title>Blood Donor Finder</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; padding: 10px; }
-        form { display: flex; flex-direction: column; align-items: center; max-width: 400px; margin: auto; }
-        label, input, select, button { width: 100%; margin-bottom: 10px; padding: 10px; font-size: 16px; }
-        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #218838; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; display: none; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .iti { width: 100%; }
-        .info-text { font-size: 14px; color: #555; margin-bottom: 10px; }
-        @media (max-width: 600px) {
-            table, th, td { font-size: 14px; }
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 50px;
+            padding: 20px;
+        }
+        h2 {
+            color: #dc3545;
+            font-size: 28px;
+        }
+        .search-container {
+            margin: 20px auto;
+            padding: 10px;
+            background: white;
+            display: inline-block;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            font-size: 16px;
+        }
+        th {
+            background-color: #dc3545;
+            color: white;
+        }
+        tr:hover {
+            background: #f1f1f1;
+        }
+        #errorMessage {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h2>Blood Donor Database</h2>
-    <form id="accessForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required>
-        <label for="userBloodgroup">Your Blood Group:</label>
-        <select id="userBloodgroup" required>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-        </select>
-        <label for="requiredBloodgroup">Required Blood Group:</label>
-        <select id="requiredBloodgroup" required>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-        </select>
-        <label for="contact">Contact:</label>
-        <input type="tel" id="contact" required>
-        <label for="location">Location:</label>
-        <input type="text" id="location" required>
-        <label>
-            <input type="checkbox" id="agreeCheckbox" required> I agree
-            <span class="info-text">Your details will be saved upon entry and will be visible to others when you search for someone’s blood type.</span>
-        </label>
-        <button type="submit">Submit</button>
-    </form>
-    
-    <table id="donorTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Blood Group</th>
-                <th>Contact</th>
-                <th>Location</th>
-            </tr>
-        </thead>
-        <tbody id="donorData"></tbody>
-    </table>
-    
-    <script>
-        const webAppUrl = "https://script.google.com/macros/s/AKfycbxj3SzAJVs6G-j6FdNzMeHPOZ9DIvApntTAQgEE02cX2S6Y_61MJsjC5BOlJo1swfaL/exec"; // Replace with your actual Web App URL
+    <div class="container">
+        <h2>Find Blood Donors</h2>
 
-        async function fetchDonorData() {
+        <div class="search-container">
+            <label for="bloodGroup">Select Blood Group:</label>
+            <select id="bloodGroup" onchange="findData()">
+                <option value="">-- Select --</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+            </select>
+        </div>
+
+        <p id="errorMessage"></p>
+
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Blood Group</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody id="dataBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        let allData = [];
+
+        async function fetchData() {
+            const proxy = "https://corsproxy.io/?";
+            const url = proxy + "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtZNgS7hMGvQL3XCqKT3i-smuBP9DoBmIZpz2iIzgPKkf5nuRjh5tKAv92E6o7Lg/pub?output=csv";
+
             try {
-                const response = await fetch(webAppUrl);
-                const donors = await response.json();
-                return donors;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Error fetching data. Please check the link.");
+                
+                const data = await response.text();
+                processCSV(data);
             } catch (error) {
-                console.error("Error fetching donor data:", error);
-                return [];
+                console.error("Error:", error);
+                document.getElementById("errorMessage").textContent = "Could not load data. Check console (F12) for errors.";
             }
         }
 
-        document.getElementById("accessForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            
-            if (!document.getElementById("agreeCheckbox").checked) {
-                alert("You must agree to submit the form.");
+        function processCSV(csvData) {
+            const rows = csvData.trim().split("\n").map(row => row.split(","));
+            if (rows.length < 2) {
+                document.getElementById("errorMessage").textContent = "No data found in the sheet.";
                 return;
             }
 
-            // Get user input
-            const name = document.getElementById("name").value;
-            const userBloodgroup = document.getElementById("userBloodgroup").value;
-            const requiredBloodgroup = document.getElementById("requiredBloodgroup").value;
-            const contact = document.getElementById("contact").value;
-            const location = document.getElementById("location").value;
+            const headers = rows[0].map(header => header.trim());
+            const nameIndex = headers.indexOf("Name");
+            const bloodIndex = headers.indexOf("Blood Group");
+            const contactIndex = headers.indexOf("Contact");
 
-            // Save user data to Google Sheet
-            const formData = new URLSearchParams({
-                name: name,
-                bloodGroup: userBloodgroup,
-                contact: contact,
-                location: location
-            });
-
-            try {
-                await fetch(webAppUrl, {
-                    method: "POST",
-                    body: formData
-                });
-                alert("Data submitted successfully!");
-            } catch (error) {
-                console.error("Error submitting data:", error);
-                alert("Failed to submit data.");
+            if (nameIndex === -1 || bloodIndex === -1 || contactIndex === -1) {
+                document.getElementById("errorMessage").textContent = "Required columns not found in the sheet.";
+                return;
             }
 
-            // Fetch and display required blood group donors
-            document.getElementById("accessForm").style.display = "none";
-            document.getElementById("donorTable").style.display = "table";
-            
-            const donors = await fetchDonorData();
-            const donorData = document.getElementById("donorData");
-            donorData.innerHTML = "";
-            
-            const filteredDonors = donors.filter(donor => donor.bloodGroup.trim() === requiredBloodgroup);
-            
+            allData = rows.slice(1).map(row => ({
+                name: row[nameIndex]?.trim() || "N/A",
+                blood: row[bloodIndex]?.trim() || "N/A",
+                contact: row[contactIndex]?.trim() || "N/A"
+            }));
+        }
+
+        function findData() {
+            const selectedGroup = document.getElementById("bloodGroup").value;
+            const table = document.getElementById("dataTable");
+            const tableBody = document.getElementById("dataBody");
+            tableBody.innerHTML = "";  // Clear previous results
+
+            if (!selectedGroup) {
+                document.getElementById("errorMessage").textContent = "Please select a blood group.";
+                table.style.display = "none";
+                return;
+            }
+
+            const filteredDonors = allData.filter(donor => donor.blood === selectedGroup);
+
             if (filteredDonors.length === 0) {
-                donorData.innerHTML = `<tr><td colspan="4">No donors found for blood group ${requiredBloodgroup}</td></tr>`;
-            } else {
-                filteredDonors.forEach(donor => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `<td>${donor.name}</td><td>${donor.bloodGroup}</td><td>${donor.contact}</td><td>${donor.location}</td>`;
-                    donorData.appendChild(row);
-                });
+                document.getElementById("errorMessage").textContent = "No donors found for the selected blood group.";
+                table.style.display = "none";
+                return;
             }
-        });
+
+            document.getElementById("errorMessage").textContent = ""; // Clear error
+            table.style.display = "table"; // Show table
+
+            filteredDonors.forEach(donor => {
+                let tr = document.createElement("tr");
+
+                let nameCell = document.createElement("td");
+                nameCell.textContent = donor.name;
+                tr.appendChild(nameCell);
+
+                let bloodCell = document.createElement("td");
+                bloodCell.textContent = donor.blood;
+                tr.appendChild(bloodCell);
+
+                let contactCell = document.createElement("td");
+                contactCell.textContent = donor.contact;
+                tr.appendChild(contactCell);
+
+                tableBody.appendChild(tr);
+            });
+        }
+
+        fetchData();
     </script>
 </body>
 </html>
