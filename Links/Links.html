@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Links Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 45%;
+            height: 500px;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script>
+        function loadPage() {
+            const url = window.location.pathname.toLowerCase(); 
+
+            if (url.includes("office")) {
+                window.location.href = "Office.html"; // Redirect to Office.html
+            } else if (url.includes("graphics")) {
+                window.location.href = "Graphics.html"; // Redirect to Graphics.html
+            }
+        }
+    </script>
+</head>
+<body onload="loadPage()">
+
+    <h1>Welcome to Links Page</h1>
+    <p>Choose a section:</p>
+
+    <div class="container">
+        <iframe src="Office.html" title="Office Links"></iframe>
+        <iframe src="Graphics.html" title="Graphics Links"></iframe>
+    </div>
+
+</body>
+</html>
