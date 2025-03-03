@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Links</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 50px;
+            padding: 20px;
+        }
+        h2 {
+            color: #007bff;
+            font-size: 28px;
+        }
+        .table-container {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            font-size: 16px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:hover {
+            background: #f1f1f1;
+        }
+        a {
+            text-decoration: none;
+            color: #dc3545;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        #errorMessage {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Important Links</h2>
+        <p id="errorMessage"></p>
+
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Purpose</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody id="dataBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function fetchData() {
+            const proxy = "https://corsproxy.io/?";
+            const url = proxy + "https://docs.google.com/spreadsheets/d/e/2PACX-1vRdkes_jsYmXyS_2MgcN6CBKsvb4iv2RAFLkVGHA_UGksCUedGATzgp-LARNtfOWPF2s0DXXav-6Rgs/pub?output=csv";
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Error fetching data. Please check the link.");
+                
+                const data = await response.text();
+                processCSV(data);
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("errorMessage").textContent = "Could not load data. Check console (F12) for errors.";
+            }
+        }
+
+        function processCSV(csvData) {
+            const rows = csvData.trim().split("\n").map(row => row.split(","));
+            if (rows.length < 2) {
+                document.getElementById("errorMessage").textContent = "No data found in the sheet.";
+                return;
+            }
+
+            const headers = rows[0].map(header => header.trim());
+            const purposeIndex = headers.indexOf("Purpose");
+            const linkIndex = headers.indexOf("Link");
+
+            if (purposeIndex === -1 || linkIndex === -1) {
+                document.getElementById("errorMessage").textContent = "Required columns not found in the sheet.";
+                return;
+            }
+
+            const tableBody = document.getElementById("dataBody");
+            tableBody.innerHTML = ""; // Clear previous data
+
+            rows.slice(1).forEach(row => {
+                let tr = document.createElement("tr");
+
+                let purposeCell = document.createElement("td");
+                purposeCell.textContent = row[purposeIndex]?.trim() || "N/A";
+                tr.appendChild(purposeCell);
+
+                let linkCell = document.createElement("td");
+                let linkElement = document.createElement("a");
+                linkElement.href = row[linkIndex]?.trim() || "#";
+                linkElement.target = "_blank";
+                linkElement.textContent = "Open Link";
+                linkCell.appendChild(linkElement);
+                tr.appendChild(linkCell);
+
+                tableBody.appendChild(tr);
+            });
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
