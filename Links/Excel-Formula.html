@@ -42,9 +42,6 @@
             background-color: #007bff;
             color: white;
         }
-        tr:hover {
-            background: #f1f1f1;
-        }
         .copy-btn {
             background-color: #28a745;
             color: white;
@@ -56,101 +53,39 @@
         .copy-btn:hover {
             background-color: #218838;
         }
-        #errorMessage {
-            color: red;
-            font-weight: bold;
-            margin-top: 10px;
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Excel Formula</h2>
-        <p id="errorMessage"></p>
 
         <div class="table-container">
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th>Purpose</th>
-                        <th>Formula</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="dataBody"></tbody>
-            </table>
+            <iframe id="googleDocFrame" src="https://docs.google.com/document/d/e/2PACX-1vRfVWPIydUM18RF4iyK0M-p6y-b3K8fo63zjDYdyf6poEI3Gx1Pp7emYHs5VeaysYXTAveZK2SD-zN3/pub?embedded=true"></iframe>
         </div>
     </div>
 
     <script>
-        async function fetchData() {
-            const proxy = "https://corsproxy.io/?";
-            const url = proxy + "https://docs.google.com/spreadsheets/d/e/2PACX-1vSnzlPBWUIpkUVCGKbuLIsN0aB56-9AvCzJ3Lr1TtBLSRjtVhz37i56WGpjWCLgOxZkzpDnjgfJzibh/pub?output=csv";
+        function copyFormula(button) {
+            const row = button.closest("tr");
+            const formulaCell = row.querySelector("td:nth-child(2)"); // Assuming formula is in 2nd column
+            const formulaText = formulaCell ? formulaCell.textContent.trim() : "";
 
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("Error fetching data. Please check the link.");
-                
-                const data = await response.text();
-                processCSV(data);
-            } catch (error) {
-                console.error("Error:", error);
-                document.getElementById("errorMessage").textContent = "Could not load data. Check console (F12) for errors.";
-            }
-        }
-
-        function processCSV(csvData) {
-            const rows = csvData.trim().split("\n").map(row => row.split(","));
-            if (rows.length < 2) {
-                document.getElementById("errorMessage").textContent = "No data found in the sheet.";
+            if (!formulaText) {
+                alert("No formula found in this row!");
                 return;
             }
 
-            const headers = rows[0].map(header => header.trim());
-            const purposeIndex = headers.indexOf("Purpose");
-            const formulaIndex = headers.indexOf("Formula");
-
-            if (purposeIndex === -1 || formulaIndex === -1) {
-                document.getElementById("errorMessage").textContent = "Required columns not found in the sheet.";
-                return;
-            }
-
-            const tableBody = document.getElementById("dataBody");
-            tableBody.innerHTML = ""; // Clear previous data
-
-            rows.slice(1).forEach(row => {
-                let tr = document.createElement("tr");
-
-                let purposeCell = document.createElement("td");
-                purposeCell.textContent = row[purposeIndex]?.trim() || "N/A";
-                tr.appendChild(purposeCell);
-
-                let formulaCell = document.createElement("td");
-                formulaCell.textContent = row[formulaIndex]?.trim() || "N/A";
-                tr.appendChild(formulaCell);
-
-                let actionCell = document.createElement("td");
-                let copyButton = document.createElement("button");
-                copyButton.textContent = "Copy Formula";
-                copyButton.classList.add("copy-btn");
-                copyButton.onclick = () => copyToClipboard(row[formulaIndex]?.trim());
-                actionCell.appendChild(copyButton);
-                tr.appendChild(actionCell);
-
-                tableBody.appendChild(tr);
-            });
-        }
-
-        function copyToClipboard(text) {
-            if (!text) return;
-            navigator.clipboard.writeText(text).then(() => {
+            navigator.clipboard.writeText(formulaText).then(() => {
                 alert("Formula copied to clipboard!");
             }).catch(err => {
                 console.error("Failed to copy: ", err);
             });
         }
-
-        fetchData();
     </script>
 </body>
 </html>
