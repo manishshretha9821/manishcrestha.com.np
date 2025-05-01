@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batch Number Lookup</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 50px; }
+    input, button { padding: 10px; font-size: 16px; margin: 10px; }
+    table { margin: 20px auto; width: 95%; border-collapse: collapse; background: white; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); display: none; }
+    th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+    th { background: #007bff; color: white; }
+    #errorMessage { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<h2>Product Details</h2>
+
+<input type="text" id="batchInput" placeholder="Enter Batch Number">
+<button id="searchBtn">Search</button>
+<p id="errorMessage"></p>
+
+<table id="resultTable">
+  <thead>
+    <tr>
+      <th>Product Name</th>
+      <th>Batch Number</th>
+      <th>MRP</th>
+      <th>Sales Rate</th>
+      <th>Purchase Rate</th>
+      <th>Expiry</th>
+      <th>Remarks</th>
+    </tr>
+  </thead>
+  <tbody id="resultBody"></tbody>
+</table>
+
+<script>
+let batchData = [];
+
+async function fetchCSV() {
+  const proxy = "https://corsproxy.io/?";
+  const csvUrl = proxy + "https://docs.google.com/spreadsheets/d/e/2PACX-1vSMAlrtOL0U2WoM5iDr9DhxpB0s7Khb_oKc2TsBIjkW3gdmG-MoQnuXPwTonum8NNwpOcGntBbwWnpZ/pub?gid=1769485623&single=true&output=csv";
+  try {
+    const response = await fetch(csvUrl);
+    const text = await response.text();
+    const rows = text.trim().split('\n').map(r => r.split(','));
+    const headers = rows[0];
+    batchData = rows.slice(1).map(row => {
+      const entry = {};
+      headers.forEach((h, i) => entry[h.trim()] = row[i]?.trim());
+      return entry;
+    });
+  } catch (err) {
+    document.getElementById("errorMessage").textContent = "Failed to load CSV data.";
+    console.error(err);
+  }
+}
+
+function parseExpiryMonthYear(expiryStr) {
+  if (!expiryStr) return null;
+  const parts = expiryStr.split("/");
+  if (parts.length !== 2) return null;
+  let [month, year] = parts.map(s => parseInt(s));
+  if (year < 100) year += 2000;
+  if (month < 1 || month > 12) return null;
+  return { month, year };
+}
+
+function getRemarks(expiryStr) {
+  const expiry = parseExpiryMonthYear(expiryStr);
+  if (!expiry) return "Invalid Date";
+
+  const today = new Date();
+  const currentMonth = today.getMonth() + 1;
+  const currentYear = today.getFullYear();
+
+  const expiryValue = expiry.year * 12 + expiry.month;
+  const currentValue = currentYear * 12 + currentMonth;
+
+  if (expiryValue <= currentValue) return "Expired"; // Expired if expiry month <= current month
+  if (expiryValue >= currentValue + 1 && expiryValue <= currentValue + 3) return "Near Expiry"; // Near Expiry next 3 months
+  return "Salable"; // Beyond next 3 months is Salable
+}
+
+function findBatch() {
+  const input = document.getElementById("batchInput").value.trim().padStart(6, '0');
+  const table = document.getElementById("resultTable");
+  const tbody = document.getElementById("resultBody");
+  document.getElementById("errorMessage").textContent = "";
+  tbody.innerHTML = "";
+
+  if (!input) {
+    document.getElementById("errorMessage").textContent = "Please enter a batch number.";
+    table.style.display = "none";
+    return;
+  }
+
+  const match = batchData.find(entry => (entry["Batch Number"] || '').padStart(6, '0') === input);
+
+  if (!match) {
+    document.getElementById("errorMessage").textContent = "No data found for this batch number.";
+    table.style.display = "none";
+    return;
+  }
+
+  const formattedBatch = (match["Batch Number"] || "").padStart(6, '0');
+  const remarks = getRemarks(match["Expiry"]);
+
+  const row = `<tr>
+    <td>${match["Product Name"] || "N/A"}</td>
+    <td>${formattedBatch}</td>
+    <td>${match["MRP"] || "N/A"}</td>
+    <td>${match["Sales Rate"] || "N/A"}</td>
+    <td>${match["Purchase Rate"] || "N/A"}</td>
+    <td>${match["Expiry"] || "N/A"}</td>
+    <td>${remarks}</td>
+  </tr>`;
+
+  tbody.innerHTML = row;
+  table.style.display = "table";
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  fetchCSV();
+
+  document.getElementById("searchBtn").addEventListener("click", findBatch);
+
+  document.getElementById("batchInput").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      findBatch();
+    }
+  });
+});
+</script>
+
+</body>
+</html>
