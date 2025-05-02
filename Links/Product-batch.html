@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Batch Number Lookup</title>
+  <title>Batch/Product Lookup</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 50px; }
     input, button { padding: 10px; font-size: 16px; margin: 10px; }
@@ -17,7 +17,7 @@
 
 <h2>Product Details</h2>
 
-<input type="text" id="batchInput" placeholder="Enter Batch Number">
+<input type="text" id="batchInput" placeholder="Enter Batch Number / Product Name">
 <button id="searchBtn">Search</button>
 <p id="errorMessage"></p>
 
@@ -79,52 +79,63 @@ function getRemarks(expiryStr) {
   const expiryValue = expiry.year * 12 + expiry.month;
   const currentValue = currentYear * 12 + currentMonth;
 
-  if (expiryValue <= currentValue) return "Expired"; // Expired if expiry month <= current month
-  if (expiryValue >= currentValue + 1 && expiryValue <= currentValue + 3) return "Near Expiry"; // Near Expiry next 3 months
-  return "Salable"; // Beyond next 3 months is Salable
+  if (expiryValue <= currentValue) return "Expired"; 
+  if (expiryValue >= currentValue + 1 && expiryValue <= currentValue + 3) return "Near Expiry"; 
+  return "Salable"; 
 }
 
 function findBatch() {
   const inputField = document.getElementById("batchInput");
-  const input = inputField.value.trim().padStart(6, '0');
+  const inputRaw = inputField.value.trim();
+  const input = inputRaw.padStart(6, '0'); // batch number 6 digits
   const table = document.getElementById("resultTable");
   const tbody = document.getElementById("resultBody");
   document.getElementById("errorMessage").textContent = "";
   tbody.innerHTML = "";
 
-  if (!input) {
-    document.getElementById("errorMessage").textContent = "Please enter a batch number.";
+  if (!inputRaw) {
+    document.getElementById("errorMessage").textContent = "Please enter a batch number or product name.";
     table.style.display = "none";
     return;
   }
 
-  const match = batchData.find(entry => (entry["Batch Number"] || '').padStart(6, '0') === input);
+  // First try batch number exact match
+  const batchMatch = batchData.find(entry => (entry["Batch Number"] || '').padStart(6, '0') === input);
 
-  if (!match) {
-    document.getElementById("errorMessage").textContent = "No data found for this batch number.";
+  let matches = [];
+  if (batchMatch) {
+    matches = [batchMatch]; // exact batch match
+  } else {
+    // Else, search by product name (case insensitive)
+    matches = batchData.filter(entry => (entry["Product Name"] || '').toLowerCase().includes(inputRaw.toLowerCase()));
+  }
+
+  if (matches.length === 0) {
+    document.getElementById("errorMessage").textContent = "No data found for this batch number or product name.";
     table.style.display = "none";
     return;
   }
 
-  const formattedBatch = (match["Batch Number"] || "").padStart(6, '0');
-  const remarks = getRemarks(match["Expiry"]);
+  // Build table rows
+  const rows = matches.map(match => {
+    const formattedBatch = (match["Batch Number"] || "").padStart(6, '0');
+    const remarks = getRemarks(match["Expiry"]);
+    return `<tr>
+      <td>${match["Product Name"] || "N/A"}</td>
+      <td>${formattedBatch}</td>
+      <td>${match["MRP"] || "N/A"}</td>
+      <td>${match["Sales Rate"] || "N/A"}</td>
+      <td>${match["Purchase Rate"] || "N/A"}</td>
+      <td>${match["Expiry"] || "N/A"}</td>
+      <td>${remarks}</td>
+    </tr>`;
+  }).join('');
 
-  const row = `<tr>
-    <td>${match["Product Name"] || "N/A"}</td>
-    <td>${formattedBatch}</td>
-    <td>${match["MRP"] || "N/A"}</td>
-    <td>${match["Sales Rate"] || "N/A"}</td>
-    <td>${match["Purchase Rate"] || "N/A"}</td>
-    <td>${match["Expiry"] || "N/A"}</td>
-    <td>${remarks}</td>
-  </tr>`;
-
-  tbody.innerHTML = row;
+  tbody.innerHTML = rows;
   table.style.display = "table";
 
-  // Clear input after result
+  // Clear and focus back
   inputField.value = "";
-  // Optional: focus back on input
   inputField.focus();
 }
 
