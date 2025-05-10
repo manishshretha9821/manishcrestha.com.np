@@ -74,7 +74,33 @@
     $('#portfolioModal6').on('hidden.bs.modal', function (e) {
         window.location.href = 'https://manishcrestha.com.np/';
     });
-
-
+    });
+    });
+    });
+    });
+    });
 
 })(jQuery); // End of use strict
+
+// -------------------- Protection Starts Here --------------------
+
+// Disable right-click
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+// Disable F12, Ctrl+Shift+I/J/C, and Ctrl+U
+document.addEventListener('keydown', function(e) {
+    // F12
+    if (e.keyCode === 123) {
+        e.preventDefault();
+    }
+    // Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console), Ctrl+Shift+C (Inspect Element)
+    if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+        e.preventDefault();
+    }
+    // Ctrl+U (View Page Source)
+    if (e.ctrlKey && e.keyCode === 85) {
+        e.preventDefault();
+    }
+});
