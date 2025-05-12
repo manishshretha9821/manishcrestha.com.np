@@ -1,7 +1,7 @@
 /*!
  * Start Bootstrap - Freelancer v6.0.5 (https://startbootstrap.com/theme/freelancer)
  * Copyright 2013-2020 Start Bootstrap
- * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-freelancer/blob/master/LICENSE)
+ * Licensed under MIT
  */
 (function($) {
     "use strict"; // Start of use strict
@@ -49,9 +49,7 @@
             $("#mainNav").removeClass("navbar-shrink");
         }
     };
-    // Collapse now if page is not at top
     navbarCollapse();
-    // Collapse the navbar when page is scrolled
     $(window).scroll(navbarCollapse);
 
     // Floating label headings for the contact form
@@ -65,19 +63,24 @@
         });
     });
 
-    // Add an event listener for when the modal is hidden
+    // Proper separate event listeners for each modal
     $('#portfolioModal1').on('hidden.bs.modal', function (e) {
-    $('#portfolioModal2').on('hidden.bs.modal', function (e) {
-    $('#portfolioModal3').on('hidden.bs.modal', function (e) {
-    $('#portfolioModal4').on('hidden.bs.modal', function (e) {
-    $('#portfolioModal5').on('hidden.bs.modal', function (e) {
-    $('#portfolioModal6').on('hidden.bs.modal', function (e) {
         window.location.href = 'https://manishcrestha.com.np/';
     });
+    $('#portfolioModal2').on('hidden.bs.modal', function (e) {
+        window.location.href = 'https://manishcrestha.com.np/';
     });
+    $('#portfolioModal3').on('hidden.bs.modal', function (e) {
+        window.location.href = 'https://manishcrestha.com.np/';
     });
+    $('#portfolioModal4').on('hidden.bs.modal', function (e) {
+        window.location.href = 'https://manishcrestha.com.np/';
     });
+    $('#portfolioModal5').on('hidden.bs.modal', function (e) {
+        window.location.href = 'https://manishcrestha.com.np/';
     });
+    $('#portfolioModal6').on('hidden.bs.modal', function (e) {
+        window.location.href = 'https://manishcrestha.com.np/';
     });
 
 })(jQuery); // End of use strict
@@ -91,15 +94,12 @@ document.addEventListener('contextmenu', function(e) {
 
 // Disable F12, Ctrl+Shift+I/J/C, and Ctrl+U
 document.addEventListener('keydown', function(e) {
-    // F12
     if (e.keyCode === 123) {
         e.preventDefault();
     }
-    // Ctrl+Shift+I (Inspect), Ctrl+Shift+J (Console), Ctrl+Shift+C (Inspect Element)
     if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
         e.preventDefault();
     }
-    // Ctrl+U (View Page Source)
     if (e.ctrlKey && e.keyCode === 85) {
         e.preventDefault();
     }
