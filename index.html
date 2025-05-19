@@ -57,11 +57,10 @@
 <button onclick="downloadCV()" style="background-color: black; color: white; padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer;">Download CV</button>
 
 <script>
-  function downloadCV() {
+function downloadCV() {
     var link = document.createElement('a');
-    link.href = 'https://docs.google.com/spreadsheets/d/1mlSKtdsQ7wj344ABUbOzIz5ka0Sw4USf3D6J8IjdPkI/edit?usp=sharing';
-    link.setAttribute('target', '_blank');
-    link.setAttribute('download', 'My CV');
+    link.href = 'CV.html'; // Relative path to CV.html
+    link.setAttribute('target', '_blank'); // Opens in a new tab
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
