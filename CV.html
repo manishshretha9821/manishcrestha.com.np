@@ -1,178 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Nepali Calendar 2082 B.S.</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manish Shrestha - CV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --accent-color: #90caf9;
+      --table-border: #555;
+      --link-color: #64b5f6;
+      --container-bg: #1e1e1e;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.8;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       margin: 0;
       padding: 20px;
     }
 
-    .calendar-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-    }
-
-    .month {
-      background: white;
-      padding: 15px;
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: var(--container-bg);
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    .month h2 {
-      text-align: center;
-      margin: 0 0 10px;
+    h1 {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
-    .days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
+    h2 {
+      margin-top: 40px;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+      color: var(--accent-color);
+      border-bottom: 2px solid var(--table-border);
+      padding-bottom: 5px;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
-    .day {
-      padding: 10px;
-      background: #e0e0e0;
-      border-radius: 4px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.3s;
+    h3 {
+      margin-top: 25px;
+      font-size: 1.2em;
+      font-weight: 700;
+      color: var(--text-color);
     }
 
-    .day:hover {
-      background: #90caf9;
-      color: white;
-    }
-
-    .day-name {
-      font-weight: bold;
-      text-align: center;
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, 0);
-      background: white;
-      padding: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
-      border-radius: 8px;
-      z-index: 999;
-    }
-
-    .modal input, .modal textarea {
+    table {
       width: 100%;
+      border-collapse: collapse;
       margin-top: 10px;
-      padding: 8px;
+      margin-bottom: 30px;
     }
 
-    .modal button {
-      margin-top: 10px;
-      padding: 8px 12px;
-      background: #90caf9;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    table, th, td {
+      border: 1px solid var(--table-border);
     }
 
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.3);
-      z-index: 998;
+    th, td {
+      padding: 12px;
+      text-align: left;
+      font-size: 0.95em;
+    }
+
+    ul {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+
+    p, li {
+      font-size: 1em;
+    }
+
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.6em;
+      }
+      h2 {
+        font-size: 1.2em;
+      }
+      h3 {
+        font-size: 1em;
+      }
+      table, th, td {
+        font-size: 0.85em;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Manish Shrestha</h1>
+    <p><strong>Location:</strong> Bharatpur-02, Chitwan</p>
+    <p><strong>Phone:</strong> +977-9821231463</p>
+    <p><strong>Email:</strong> mail@manishcrestha.com.np</p>
+    <p><strong>Website:</strong> <a href="https://www.manishcrestha.com.np" target="_blank">www.manishcrestha.com.np</a></p>
+    <p><strong>Linkedin:</strong> <a href="https://www.linkedin.com/in/manishshrestha09" target="_blank">manishshrestha09</a></p>
+    <h2>Professional Summary</h2>
+    <p>Energetic and detail-oriented Admin Assistant with over 3 years of experience in office administration, reporting, and coordination within the pharmaceutical and hospitality sectors. Strong command over MS Excel, Tally, and digital communication, with proven ability to manage tasks independently and meet deadlines efficiently. Currently pursuing Master of Business Studies (MBS) to enhance strategic and analytical skills.</p>
 
-  <h1>Nepali Calendar 2082 B.S.</h1>
-  <div class="calendar-container" id="calendar"></div>
+    <h2>Education</h2>
+    <table>
+      <tr><th>Degree</th><th>Institute</th><th>Board/University</th><th>Year</th><th>Result</th></tr>
+      <tr><td>MBS (Running)</td><td>Birendra Multiple Campus</td><td>Tribhuvan University</td><td>Ongoing</td><td>-</td></tr>
+      <tr><td>BBS</td><td>Balkumari College</td><td>Tribhuvan University</td><td>2023</td><td>53.45%</td></tr>
+      <tr><td>+2 (Management)</td><td>Balkumari Kanya Secondary School</td><td>NEB</td><td>2017</td><td>69.60%</td></tr>
+      <tr><td>SLC</td><td>Balkumari Kanya Secondary School</td><td>SLC Board of Nepal</td><td>2013</td><td>75%</td></tr>
+    </table>
 
-  <div class="overlay" id="overlay" onclick="closeModal()"></div>
-  <div class="modal" id="eventModal">
-    <h3>Add Event for <span id="eventDate"></span></h3>
-    <input type="text" id="eventTitle" placeholder="Title (e.g. Birthday)">
-    <textarea id="eventNote" placeholder="Note (e.g. Buy gift, Call friend)"></textarea>
-    <button onclick="saveEvent()">Save</button>
+    <h2>Work Experience</h2>
+    <h3>Admin Assistant - Greenfield Pharma Pvt. Ltd.</h3>
+    <p><strong>Duration:</strong> May 2022 – Present</p>
+    <ul>
+      <li>Coordinated with factory and directors for procurement and delivery operations</li>
+      <li>Prepared HR reports, marketing summaries, and financial documentation</li>
+      <li>Managed general procurement and inventory</li>
+      <li>Maintained accuracy in accounts and billing using MassPro software</li>
+    </ul>
+
+    <h3>Creative Head – Sai Youth Narayangarh</h3>
+    <p><strong>Duration:</strong> 2022 – Present</p>
+    <ul>
+      <li>Designed graphics and animated content for spiritual events and youth programs</li>
+      <li>Created engaging posts and video edits using Photoshop, Alight Motion, and Infinite Painter</li>
+      <li>Led visual branding for Instagram and event materials</li>
+    </ul>
+
+    <h3>Office Secretary - Hotel Association Chitwan</h3>
+    <p><strong>Duration:</strong> Jan 2019 – Jan 2020</p>
+    <ul>
+      <li>Managed front-office operations and event coordination</li>
+      <li>Organized reports, maintained correspondence, and coordinated meetings</li>
+    </ul>
+
+    <h3>Intern – Global IME Bank</h3>
+    <p><strong>Duration:</strong> Oct 2018 – Dec 2018</p>
+    <ul>
+      <li>Supported customer service team with documentation and basic banking operations</li>
+    </ul>
+
+    <h2>Training & Certifications</h2>
+    <ul>
+      <li>Accounting Package Training (Tally 9, Swastika, MS Excel) – Shaping Minds Group</li>
+      <li>Personality Development & Leadership Training – Multiple programs</li>
+    </ul>
+
+    <h2>Key Skills</h2>
+    <ul>
+      <li>MS Excel, Tally, Swastika</li>
+      <li>Office administration and documentation</li>
+      <li>Procurement & billing software (MassPro)</li>
+      <li>Communication & coordination</li>
+      <li>Graphic Design (Photoshop, Alight Motion, Infinite Painter)</li>
+      <li>Basic animation and motion graphics</li>
+      <li>Languages: Nepali (Fluent), English (Good command)</li>
+    </ul>
+
+    <h2>Declaration</h2>
+    <p>I hereby declare that the above information is true and correct to the best of my knowledge and belief.</p>
   </div>
-
-  <script>
-    const months = [
-      "Baisakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
-      "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra"
-    ];
-
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-    const calendar = document.getElementById("calendar");
-
-    months.forEach(month => {
-      const monthDiv = document.createElement("div");
-      monthDiv.className = "month";
-      monthDiv.innerHTML = `<h2>${month} 2082</h2>`;
-
-      const daysDiv = document.createElement("div");
-      daysDiv.className = "days";
-
-      // Add day names
-      daysOfWeek.forEach(day => {
-        const dayNameDiv = document.createElement("div");
-        dayNameDiv.className = "day-name";
-        dayNameDiv.textContent = day;
-        daysDiv.appendChild(dayNameDiv);
-      });
-
-      // For simplicity, assuming 30 days in each month
-      for (let i = 1; i <= 30; i++) {
-        const dayDiv = document.createElement("div");
-        dayDiv.className = "day";
-        dayDiv.textContent = i;
-        dayDiv.onclick = () => openModal(`${month} ${i}`);
-        daysDiv.appendChild(dayDiv);
-      }
-
-      monthDiv.appendChild(daysDiv);
-      calendar.appendChild(monthDiv);
-    });
-
-    // Modal Logic
-    let selectedDate = "";
-
-    function openModal(date) {
-      selectedDate = date;
-      document.getElementById("eventDate").textContent = date;
-      document.getElementById("overlay").style.display = "block";
-      document.getElementById("eventModal").style.display = "block";
-    }
-
-    function closeModal() {
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("eventModal").style.display = "none";
-    }
-
-    function saveEvent() {
-      const title = document.getElementById("eventTitle").value;
-      const note = document.getElementById("eventNote").value;
-
-      if (title.trim() === "") {
-        alert("Please enter a title.");
-        return;
-      }
-
-      alert(`Saved event:\n\nDate: ${selectedDate}\nTitle: ${title}\nNote: ${note}`);
-      closeModal();
-    }
-  </script>
 </body>
 </html>
