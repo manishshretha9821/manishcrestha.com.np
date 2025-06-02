@@ -127,6 +127,7 @@
             const nameIndex = headers.indexOf("Name");
             const bloodIndex = headers.indexOf("Blood Group");
             const contactIndex = headers.indexOf("Contact");
+            const contactIndex = headers.indexOf("Address");
 
             if (nameIndex === -1 || bloodIndex === -1 || contactIndex === -1) {
                 document.getElementById("errorMessage").textContent = "Required columns not found in the sheet.";
@@ -137,6 +138,7 @@
                 name: row[nameIndex]?.trim() || "N/A",
                 blood: row[bloodIndex]?.trim() || "N/A",
                 contact: row[contactIndex]?.trim() || "N/A"
+                Address: row[AddressIndex]?.trim() || "N/A"
             }));
         }
 
