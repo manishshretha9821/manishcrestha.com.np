@@ -91,6 +91,7 @@
                     <th>Name</th>
                     <th>Blood Group</th>
                     <th>Contact</th>
+                    <th>Address</th>
                 </tr>
             </thead>
             <tbody id="dataBody"></tbody>
@@ -127,7 +128,7 @@
             const nameIndex = headers.indexOf("Name");
             const bloodIndex = headers.indexOf("Blood Group");
             const contactIndex = headers.indexOf("Contact");
-            const contactIndex = headers.indexOf("Address");
+            const AddressIndex = headers.indexOf("Address");
 
             if (nameIndex === -1 || bloodIndex === -1 || contactIndex === -1) {
                 document.getElementById("errorMessage").textContent = "Required columns not found in the sheet.";
@@ -179,6 +180,10 @@
                 let contactCell = document.createElement("td");
                 contactCell.textContent = donor.contact;
                 tr.appendChild(contactCell);
+
+                let AddressCell = document.createElement("td");
+                AddressCell.textContent = donor.Address;
+                tr.appendChild(AddressCell);
 
                 tableBody.appendChild(tr);
             });
