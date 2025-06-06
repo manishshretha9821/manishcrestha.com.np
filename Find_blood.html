@@ -108,7 +108,7 @@
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("Error fetching data. Please check the link.");
-                
+
                 const data = await response.text();
                 processCSV(data);
             } catch (error) {
@@ -128,9 +128,9 @@
             const nameIndex = headers.indexOf("Name");
             const bloodIndex = headers.indexOf("Blood Group");
             const contactIndex = headers.indexOf("Contact");
-            const AddressIndex = headers.indexOf("Address");
+            const addressIndex = headers.indexOf("Address");
 
-            if (nameIndex === -1 || bloodIndex === -1 || contactIndex === -1) {
+            if (nameIndex === -1 || bloodIndex === -1 || contactIndex === -1 || addressIndex === -1) {
                 document.getElementById("errorMessage").textContent = "Required columns not found in the sheet.";
                 return;
             }
@@ -138,8 +138,8 @@
             allData = rows.slice(1).map(row => ({
                 name: row[nameIndex]?.trim() || "N/A",
                 blood: row[bloodIndex]?.trim() || "N/A",
-                contact: row[contactIndex]?.trim() || "N/A"
-                Address: row[AddressIndex]?.trim() || "N/A"
+                contact: row[contactIndex]?.trim() || "N/A",
+                address: row[addressIndex]?.trim() || "N/A"
             }));
         }
 
@@ -147,7 +147,7 @@
             const selectedGroup = document.getElementById("bloodGroup").value;
             const table = document.getElementById("dataTable");
             const tableBody = document.getElementById("dataBody");
-            tableBody.innerHTML = "";  // Clear previous results
+            tableBody.innerHTML = "";
 
             if (!selectedGroup) {
                 document.getElementById("errorMessage").textContent = "Please select a blood group.";
@@ -163,8 +163,8 @@
                 return;
             }
 
-            document.getElementById("errorMessage").textContent = ""; // Clear error
-            table.style.display = "table"; // Show table
+            document.getElementById("errorMessage").textContent = "";
+            table.style.display = "table";
 
             filteredDonors.forEach(donor => {
                 let tr = document.createElement("tr");
@@ -181,9 +181,9 @@
                 contactCell.textContent = donor.contact;
                 tr.appendChild(contactCell);
 
-                let AddressCell = document.createElement("td");
-                AddressCell.textContent = donor.Address;
-                tr.appendChild(AddressCell);
+                let addressCell = document.createElement("td");
+                addressCell.textContent = donor.address;
+                tr.appendChild(addressCell);
 
                 tableBody.appendChild(tr);
             });
