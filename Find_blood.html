@@ -157,7 +157,8 @@
   </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbw3HWN-1qRC28JZaM-LFAlbOjLL1lnSS_Z8fyH1C6d1oCZxWgidM4n-wxCRDJNjoL0j/exec";
+    // ✅ CORS proxy added here
+    const scriptURL = "https://corsproxy.io/?https://script.google.com/macros/s/AKfycbw3HWN-1qRC28JZaM-LFAlbOjLL1lnSS_Z8fyH1C6d1oCZxWgidM4n-wxCRDJNjoL0j/exec";
 
     document.getElementById("donorForm").addEventListener("submit", function(e) {
       e.preventDefault();
@@ -170,17 +171,22 @@
       })
       .then(response => response.text())
       .then(result => {
-        document.getElementById("successMessage").innerText = "✅ Thank you for registering!";
-        form.reset();
-        fetchData(); // reload updated donor list
+        console.log("Server says:", result);
+        if (result.toLowerCase().includes("success")) {
+          document.getElementById("successMessage").innerText = "✅ Thank you for registering!";
+          form.reset();
+          fetchData(); // reload donor list
+        } else {
+          document.getElementById("successMessage").innerText = "❌ Submission failed. Try again.";
+        }
       })
       .catch(error => {
-        document.getElementById("successMessage").innerText = "❌ Something went wrong.";
+        console.error("Submission error:", error);
+        document.getElementById("successMessage").innerText = "❌ Network error. Please try again.";
       });
     });
 
     function showForm() {
-      // Hide everything else except form
       document.getElementById("searchSection").style.display = "none";
       document.getElementById("dataTable").style.display = "none";
       document.getElementById("donorMessage").style.display = "none";
