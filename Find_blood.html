@@ -1,195 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Donor Finder</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            background: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            margin-top: 50px;
-            padding: 20px;
-        }
-        h2 {
-            color: #dc3545;
-            font-size: 28px;
-        }
-        .search-container {
-            margin: 20px auto;
-            padding: 10px;
-            background: white;
-            display: inline-block;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        select {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            font-size: 16px;
-        }
-        th {
-            background-color: #dc3545;
-            color: white;
-        }
-        tr:hover {
-            background: #f1f1f1;
-        }
-        #errorMessage {
-            color: red;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Blood Donor Finder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+    }
+    h2 {
+      color: #dc3545;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .search-container, table {
+      margin-top: 30px;
+    }
+    table {
+      width: 90%;
+      margin: auto;
+      border-collapse: collapse;
+      background: white;
+      display: none;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #dc3545;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    #successMessage {
+      color: green;
+      margin-top: 10px;
+    }
+    #errorMessage {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    #donorMessage {
+      display: none;
+      margin-top: 40px;
+      font-size: 16px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #donorMessage a {
+      color: #dc3545;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    #donorMessage a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Find Blood Donors</h2>
+  <div class="container" id="mainContainer">
 
-        <div class="search-container">
-            <label for="bloodGroup">Select Blood Group:</label>
-            <select id="bloodGroup" onchange="findData()">
-                <option value="">-- Select --</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-            </select>
-        </div>
-
-        <p id="errorMessage"></p>
-
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Blood Group</th>
-                    <th>Contact</th>
-                    <th>Address</th>
-                </tr>
-            </thead>
-            <tbody id="dataBody"></tbody>
-        </table>
+    <h2>Find Blood Donors</h2>
+    <div class="search-container" id="searchSection">
+      <label for="bloodGroup">Select Blood Group:</label>
+      <select id="bloodGroup" onchange="findData()">
+        <option value="">-- Select --</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+      </select>
     </div>
 
-    <script>
-        let allData = [];
+    <p id="errorMessage"></p>
 
-        async function fetchData() {
-            const proxy = "https://corsproxy.io/?";
-            const url = proxy + "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtZNgS7hMGvQL3XCqKT3i-smuBP9DoBmIZpz2iIzgPKkf5nuRjh5tKAv92E6o7Lg/pub?output=csv";
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Blood Group</th>
+          <th>Contact</th>
+          <th>Address</th>
+        </tr>
+      </thead>
+      <tbody id="dataBody"></tbody>
+    </table>
 
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("Error fetching data. Please check the link.");
+    <!-- Motivational message (shown after search) -->
+    <div id="donorMessage">
+      <p>
+        If this helped you, be a part of the cause!<br>
+        Add your blood group and contact info using the
+        <a href="#" onclick="showForm()">link here</a>.<br>
+        Then, share the link with at least two friends. One simple step could help save a life.
+      </p>
+    </div>
 
-                const data = await response.text();
-                processCSV(data);
-            } catch (error) {
-                console.error("Error:", error);
-                document.getElementById("errorMessage").textContent = "Could not load data. Check console (F12) for errors.";
-            }
-        }
+    <!-- Donor Form (Initially Hidden) -->
+    <div id="donorFormContainer" style="display: none; margin-top: 20px;">
+      <h2>Become a Blood Donor</h2>
+      <form id="donorForm">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <select name="blood" required>
+          <option value="">Select Blood Group</option>
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+        </select>
+        <input type="tel" name="contact" placeholder="Contact Number" required>
+        <input type="text" name="address" placeholder="Address" required>
+        <button type="submit">Submit</button>
+        <div id="successMessage"></div>
+      </form>
+    </div>
 
-        function processCSV(csvData) {
-            const rows = csvData.trim().split("\n").map(row => row.split(","));
-            if (rows.length < 2) {
-                document.getElementById("errorMessage").textContent = "No data found in the sheet.";
-                return;
-            }
+  </div>
 
-            const headers = rows[0].map(header => header.trim());
-            const nameIndex = headers.indexOf("Name");
-            const bloodIndex = headers.indexOf("Blood Group");
-            const contactIndex = headers.indexOf("Contact");
-            const addressIndex = headers.indexOf("Address");
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbw3HWN-1qRC28JZaM-LFAlbOjLL1lnSS_Z8fyH1C6d1oCZxWgidM4n-wxCRDJNjoL0j/exec";
 
-            if (nameIndex === -1 || bloodIndex === -1 || contactIndex === -1 || addressIndex === -1) {
-                document.getElementById("errorMessage").textContent = "Required columns not found in the sheet.";
-                return;
-            }
+    document.getElementById("donorForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
 
-            allData = rows.slice(1).map(row => ({
-                name: row[nameIndex]?.trim() || "N/A",
-                blood: row[bloodIndex]?.trim() || "N/A",
-                contact: row[contactIndex]?.trim() || "N/A",
-                address: row[addressIndex]?.trim() || "N/A"
-            }));
-        }
+      fetch(scriptURL, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(result => {
+        document.getElementById("successMessage").innerText = "✅ Thank you for registering!";
+        form.reset();
+        fetchData(); // reload updated donor list
+      })
+      .catch(error => {
+        document.getElementById("successMessage").innerText = "❌ Something went wrong.";
+      });
+    });
 
-        function findData() {
-            const selectedGroup = document.getElementById("bloodGroup").value;
-            const table = document.getElementById("dataTable");
-            const tableBody = document.getElementById("dataBody");
-            tableBody.innerHTML = "";
+    function showForm() {
+      // Hide everything else except form
+      document.getElementById("searchSection").style.display = "none";
+      document.getElementById("dataTable").style.display = "none";
+      document.getElementById("donorMessage").style.display = "none";
+      document.getElementById("donorFormContainer").style.display = "block";
+    }
 
-            if (!selectedGroup) {
-                document.getElementById("errorMessage").textContent = "Please select a blood group.";
-                table.style.display = "none";
-                return;
-            }
+    let allData = [];
 
-            const filteredDonors = allData.filter(donor => donor.blood === selectedGroup);
+    async function fetchData() {
+      const proxy = "https://corsproxy.io/?";
+      const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQdyyknQ1kjDCLneXfh_p1zn2Ygj9KXiSOWexKXf-3BcZN8Ae7_5Su3zPEn1lY1gd-gmYVEKXK2ucCP/pub?output=csv";
+      const url = proxy + sheetURL;
 
-            if (filteredDonors.length === 0) {
-                document.getElementById("errorMessage").textContent = "No donors found for the selected blood group.";
-                table.style.display = "none";
-                return;
-            }
+      try {
+        const response = await fetch(url);
+        const data = await response.text();
+        processCSV(data);
+      } catch (error) {
+        document.getElementById("errorMessage").textContent = "Could not load data. Try again later.";
+      }
+    }
 
-            document.getElementById("errorMessage").textContent = "";
-            table.style.display = "table";
+    function processCSV(csvData) {
+      const rows = csvData.trim().split("\n").map(row => row.split(","));
+      if (rows.length < 2) {
+        document.getElementById("errorMessage").textContent = "No data found in the sheet.";
+        return;
+      }
 
-            filteredDonors.forEach(donor => {
-                let tr = document.createElement("tr");
+      const headers = rows[0];
+      const nameIndex = headers.indexOf("Name");
+      const bloodIndex = headers.indexOf("Blood Group");
+      const contactIndex = headers.indexOf("Contact");
+      const addressIndex = headers.indexOf("Address");
 
-                let nameCell = document.createElement("td");
-                nameCell.textContent = donor.name;
-                tr.appendChild(nameCell);
+      allData = rows.slice(1).map(row => ({
+        name: row[nameIndex]?.trim() || "N/A",
+        blood: row[bloodIndex]?.trim() || "N/A",
+        contact: row[contactIndex]?.trim() || "N/A",
+        address: row[addressIndex]?.trim() || "N/A"
+      }));
+    }
 
-                let bloodCell = document.createElement("td");
-                bloodCell.textContent = donor.blood;
-                tr.appendChild(bloodCell);
+    function findData() {
+      const selectedGroup = document.getElementById("bloodGroup").value;
+      const table = document.getElementById("dataTable");
+      const tableBody = document.getElementById("dataBody");
+      tableBody.innerHTML = "";
 
-                let contactCell = document.createElement("td");
-                contactCell.textContent = donor.contact;
-                tr.appendChild(contactCell);
+      if (!selectedGroup) {
+        document.getElementById("errorMessage").textContent = "Please select a blood group.";
+        table.style.display = "none";
+        return;
+      }
 
-                let addressCell = document.createElement("td");
-                addressCell.textContent = donor.address;
-                tr.appendChild(addressCell);
+      const filtered = allData.filter(donor => donor.blood === selectedGroup);
 
-                tableBody.appendChild(tr);
-            });
-        }
+      if (filtered.length === 0) {
+        document.getElementById("errorMessage").textContent = "No donors found for this group.";
+        table.style.display = "none";
+        return;
+      }
 
-        fetchData();
-    </script>
+      document.getElementById("errorMessage").textContent = "";
+      table.style.display = "table";
+
+      filtered.forEach(d => {
+        const row = `<tr>
+          <td>${d.name}</td>
+          <td>${d.blood}</td>
+          <td>${d.contact}</td>
+          <td>${d.address}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+
+      document.getElementById("donorMessage").style.display = "block";
+    }
+
+    fetchData();
+  </script>
 </body>
 </html>
