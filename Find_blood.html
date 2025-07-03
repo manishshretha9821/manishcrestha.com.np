@@ -157,7 +157,6 @@
   </div>
 
   <script>
-    // ✅ CORS proxy added here
     const scriptURL = "https://corsproxy.io/?https://script.google.com/macros/s/AKfycbw3HWN-1qRC28JZaM-LFAlbOjLL1lnSS_Z8fyH1C6d1oCZxWgidM4n-wxCRDJNjoL0j/exec";
 
     document.getElementById("donorForm").addEventListener("submit", function(e) {
@@ -171,11 +170,11 @@
       })
       .then(response => response.text())
       .then(result => {
-        console.log("Server says:", result);
+        console.log("SERVER RESPONSE:", result);
         if (result.toLowerCase().includes("success")) {
           document.getElementById("successMessage").innerText = "✅ Thank you for registering!";
           form.reset();
-          fetchData(); // reload donor list
+          fetchData();
         } else {
           document.getElementById("successMessage").innerText = "❌ Submission failed. Try again.";
         }
