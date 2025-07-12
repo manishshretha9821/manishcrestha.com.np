@@ -254,7 +254,7 @@
   </div>
 
   <div class="footer">
-    <p>&copy; Donate blood, Save life.</a></p>
+    <p>&copy; 2025 Nepal Blood Donor Network. All rights reserved. | <a href="#">Privacy Policy</a></p>
   </div>
 
   <script>
@@ -271,10 +271,21 @@
       const formData = new FormData(form);
       const successMessageElem = document.getElementById("successMessage");
 
+      // Convert FormData to a plain object
+      const data = {};
+      for (let [key, value] of formData.entries()) {
+        data[key] = value;
+      }
+
       try {
         const response = await fetch(scriptURL, {
           method: "POST",
-          body: formData
+          headers: {
+            // Set Content-Type to text/plain to bypass complex CORS preflight
+            // The Google Apps Script doPost function needs to parse this as JSON
+            'Content-Type': 'text/plain;charset=utf-8',
+          },
+          body: JSON.stringify(data) // Stringify the data as JSON
         });
         const result = await response.text();
         console.log("SERVER RESPONSE:", result);
