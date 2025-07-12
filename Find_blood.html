@@ -271,21 +271,20 @@
       const formData = new FormData(form);
       const successMessageElem = document.getElementById("successMessage");
 
-      // Convert FormData to a plain object
-      const data = {};
+      // Convert FormData to URLSearchParams for x-www-form-urlencoded
+      const data = new URLSearchParams();
       for (let [key, value] of formData.entries()) {
-        data[key] = value;
+        data.append(key, value);
       }
 
       try {
         const response = await fetch(scriptURL, {
           method: "POST",
           headers: {
-            // Set Content-Type to text/plain to bypass complex CORS preflight
-            // The Google Apps Script doPost function needs to parse this as JSON
-            'Content-Type': 'text/plain;charset=utf-8',
+            // Set Content-Type for form-urlencoded data
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: JSON.stringify(data) // Stringify the data as JSON
+          body: data // Use URLSearchParams directly as the body
         });
         const result = await response.text();
         console.log("SERVER RESPONSE:", result);
