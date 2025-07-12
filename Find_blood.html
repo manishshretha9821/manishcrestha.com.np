@@ -2,98 +2,197 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Blood Donor Finder</title>
+  <title>Nepal Blood Donor Network</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* General Body Styles */
     body {
-      font-family: Arial, sans-serif;
-      background: #f8f9fa;
+      font-family: 'Roboto', Arial, sans-serif;
+      background: #f0f2f5; /* Light gray background for a modern feel */
       margin: 0;
       padding: 0;
       text-align: center;
+      color: #333; /* Darker text for readability */
     }
+
+    /* Container for main content */
     .container {
-      padding: 20px;
+      padding: 30px 20px;
+      max-width: 900px;
+      margin: 20px auto;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Softer shadow */
     }
+
+    /* Headings */
     h2 {
-      color: #dc3545;
+      color: #c0392b; /* A slightly darker, richer red */
+      margin-bottom: 25px;
+      font-weight: 700;
+      font-size: 1.8em;
     }
-    form {
-      background: #fff;
-      padding: 20px;
+
+    /* Form and Search Container Styling */
+    form, .search-container {
+      background: #fdfdfd;
+      padding: 25px;
       max-width: 500px;
-      margin: auto;
+      margin: 25px auto;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Lighter shadow for sections */
+      border: 1px solid #eee; /* Subtle border */
     }
+
+    /* Input and Select Fields */
     input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: #dc3545;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .search-container, table {
-      margin-top: 30px;
-    }
-    table {
-      width: 90%;
-      margin: auto;
-      border-collapse: collapse;
-      background: white;
-      display: none;
-    }
-    th, td {
+      width: calc(100% - 22px); /* Account for padding */
       padding: 12px;
-      border: 1px solid #ddd;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ddd; /* Lighter border */
+      font-size: 1em;
+      box-sizing: border-box; /* Include padding in width */
     }
-    th {
-      background-color: #dc3545;
+
+    input:focus, select:focus {
+      border-color: #c0392b; /* Highlight on focus */
+      outline: none;
+      box-shadow: 0 0 5px rgba(192, 57, 43, 0.3);
+    }
+
+    /* Buttons */
+    button {
+      background-color: #e74c3c; /* Bright red for action */
       color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: 700;
+      transition: background-color 0.3s ease; /* Smooth transition */
+      margin-top: 10px;
     }
+
+    button:hover {
+      background-color: #c0392b; /* Darker red on hover */
+    }
+
+    /* Table Styling */
+    table {
+      width: 95%;
+      margin: 30px auto;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden; /* Ensures rounded corners on table */
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: none; /* Hidden by default */
+    }
+
+    th, td {
+      padding: 15px;
+      border: 1px solid #eee; /* Light border for cells */
+      text-align: left;
+    }
+
+    th {
+      background-color: #e74c3c;
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.9em;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8f8f8; /* Zebra striping for readability */
+    }
+
     tr:hover {
       background-color: #f1f1f1;
     }
+
+    /* Messages */
     #successMessage {
-      color: green;
-      margin-top: 10px;
-    }
-    #errorMessage {
-      color: red;
+      color: #27ae60; /* Green for success */
+      margin-top: 15px;
       font-weight: bold;
-      margin-top: 10px;
+      font-size: 1.05em;
     }
+
+    #errorMessage {
+      color: #e74c3c; /* Red for errors */
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 1.05em;
+    }
+
+    /* Motivational Donor Message */
     #donorMessage {
       display: none;
       margin-top: 40px;
-      font-size: 16px;
+      padding: 25px;
+      font-size: 1.1em;
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
+      background-color: #ecf0f1; /* Light background for the message box */
+      border-left: 5px solid #e74c3c; /* Accent border */
+      border-radius: 8px;
+      text-align: left;
+      line-height: 1.6;
     }
+
+    #donorMessage p {
+      margin: 0;
+    }
+
     #donorMessage a {
-      color: #dc3545;
+      color: #e74c3c;
       font-weight: bold;
       text-decoration: none;
+      transition: color 0.3s ease;
     }
+
     #donorMessage a:hover {
       text-decoration: underline;
+      color: #c0392b;
     }
+
+    /* Donor Form Container (Initially Hidden) */
+    #donorFormContainer {
+      display: none;
+      margin-top: 20px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #333;
+      color: #bbb;
+      font-size: 0.9em;
+      border-radius: 0 0 10px 10px; /* Match container border radius */
+    }
+
+    .footer a {
+      color: #e74c3c;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
   </style>
 </head>
 <body>
   <div class="container" id="mainContainer">
 
-    <h2>Find Blood Donors</h2>
+    <h2>Find Blood Donors in Nepal</h2>
     <div class="search-container" id="searchSection">
-      <label for="bloodGroup">Select Blood Group:</label>
+      <label for="bloodGroup" style="display: block; text-align: left; margin-bottom: 5px; font-weight: bold;">Select Blood Group:</label>
       <select id="bloodGroup" onchange="findData()">
         <option value="">-- Select --</option>
         <option value="A+">A+</option>
@@ -105,9 +204,9 @@
         <option value="AB+">AB+</option>
         <option value="AB-">AB-</option>
       </select>
+      <p id="errorMessage"></p>
     </div>
 
-    <p id="errorMessage"></p>
 
     <table id="dataTable">
       <thead>
@@ -121,21 +220,19 @@
       <tbody id="dataBody"></tbody>
     </table>
 
-    <!-- Motivational message (shown after search) -->
     <div id="donorMessage">
       <p>
-        If this helped you, be a part of the cause!<br>
-        Add your blood group and contact info using the
+        If this helped you, please consider becoming a part of this life-saving cause!<br>
+        You can add your blood group and contact info using the
         <a href="#" onclick="showForm()">link here</a>.<br>
-        Then, share the link with at least two friends. One simple step could help save a life.
+        Then, share this initiative with at least two friends. One simple step could help save a life.
       </p>
     </div>
 
-    <!-- Donor Form (Initially Hidden) -->
-    <div id="donorFormContainer" style="display: none; margin-top: 20px;">
+    <div id="donorFormContainer">
       <h2>Become a Blood Donor</h2>
       <form id="donorForm">
-        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="text" name="name" placeholder="Your Full Name" required>
         <select name="blood" required>
           <option value="">Select Blood Group</option>
           <option value="A+">A+</option>
@@ -147,79 +244,117 @@
           <option value="AB+">AB+</option>
           <option value="AB-">AB-</option>
         </select>
-        <input type="tel" name="contact" placeholder="Contact Number" required>
-        <input type="text" name="address" placeholder="Address" required>
-        <button type="submit">Submit</button>
+        <input type="tel" name="contact" placeholder="Contact Number (e.g., 98XXXXXXXX)" required pattern="[0-9]{10}">
+        <input type="text" name="address" placeholder="Your City/Area (e.g., Kathmandu, Pokhara)" required>
+        <button type="submit">Register as Donor</button>
         <div id="successMessage"></div>
       </form>
     </div>
 
   </div>
 
-  <script>
-    const scriptURL = "https://corsproxy.io/?https://script.google.com/macros/s/AKfycbw3HWN-1qRC28JZaM-LFAlbOjLL1lnSS_Z8fyH1C6d1oCZxWgidM4n-wxCRDJNjoL0j/exec";
+  <div class="footer">
+    <p>&copy; Donate blood, Save life.</a></p>
+  </div>
 
-    document.getElementById("donorForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+  <script>
+    // IMPORTANT: Make sure these URLs are correct and accessible.
+    // The scriptURL is for submitting new donor data.
+    const scriptURL = "https://corsproxy.io/?https://script.google.com/macros/s/AKfycbw3HWN-1qRC28JZaM-LFAlbOjLL1lnSS_Z8fyH1C6d1oCZxWgidM4n-wxCRDJNjoL0j/exec";
+    // The sheetURL is for fetching existing donor data.
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQdyyknQ1kjDCLneXfh_p1zn2Ygj9KXiSOWexKXf-3BcZN8Ae7_5Su3zPEn1lY1gd-gmYVEKXK2ucCP/pub?output=csv";
+
+    // Event listener for the donor registration form submission
+    document.getElementById("donorForm").addEventListener("submit", async function(e) {
+      e.preventDefault(); // Prevent default form submission
       const form = e.target;
       const formData = new FormData(form);
+      const successMessageElem = document.getElementById("successMessage");
 
-      fetch(scriptURL, {
-        method: "POST",
-        body: formData
-      })
-      .then(response => response.text())
-      .then(result => {
+      try {
+        const response = await fetch(scriptURL, {
+          method: "POST",
+          body: formData
+        });
+        const result = await response.text();
         console.log("SERVER RESPONSE:", result);
+
         if (result.toLowerCase().includes("success")) {
-          document.getElementById("successMessage").innerText = "✅ Thank you for registering!";
-          form.reset();
-          fetchData();
+          successMessageElem.innerText = "✅ Thank you for registering! Your data has been added.";
+          successMessageElem.style.color = '#27ae60'; // Green for success
+          form.reset(); // Clear the form
+          await fetchData(); // Refresh data after new submission
+          // Optional: Hide the form after success and show search or a confirmation screen
+          setTimeout(() => {
+              document.getElementById("donorFormContainer").style.display = "none";
+              document.getElementById("searchSection").style.display = "block";
+          }, 3000); // Hide after 3 seconds
         } else {
-          document.getElementById("successMessage").innerText = "❌ Submission failed. Try again.";
+          successMessageElem.innerText = "❌ Submission failed. Please try again or contact support.";
+          successMessageElem.style.color = '#e74c3c'; // Red for error
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error("Submission error:", error);
-        document.getElementById("successMessage").innerText = "❌ Network error. Please try again.";
-      });
+        successMessageElem.innerText = "❌ Network error. Please check your connection and try again.";
+        successMessageElem.style.color = '#e74c3c'; // Red for error
+      }
     });
 
+    // Function to show the donor registration form and hide other sections
     function showForm() {
       document.getElementById("searchSection").style.display = "none";
       document.getElementById("dataTable").style.display = "none";
       document.getElementById("donorMessage").style.display = "none";
+      document.getElementById("errorMessage").textContent = ""; // Clear any previous error
+      document.getElementById("successMessage").textContent = ""; // Clear success message
       document.getElementById("donorFormContainer").style.display = "block";
+      document.getElementById("donorForm").reset(); // Reset form when shown
     }
 
-    let allData = [];
+    let allData = []; // Global variable to store all fetched donor data
 
+    // Function to fetch data from Google Sheet
     async function fetchData() {
-      const proxy = "https://corsproxy.io/?";
-      const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQdyyknQ1kjDCLneXfh_p1zn2Ygj9KXiSOWexKXf-3BcZN8Ae7_5Su3zPEn1lY1gd-gmYVEKXK2ucCP/pub?output=csv";
+      const proxy = "https://corsproxy.io/?"; // CORS proxy to bypass cross-origin restrictions
       const url = proxy + sheetURL;
+      const errorMessageElem = document.getElementById("errorMessage");
 
       try {
         const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.text();
         processCSV(data);
+        errorMessageElem.textContent = ""; // Clear error if data loads
       } catch (error) {
-        document.getElementById("errorMessage").textContent = "Could not load data. Try again later.";
+        console.error("Could not load data:", error);
+        errorMessageElem.textContent = "Error: Could not load donor data. Please try again later.";
+        document.getElementById("dataTable").style.display = "none"; // Hide table on error
       }
     }
 
+    // Function to process CSV data into a usable array of objects
     function processCSV(csvData) {
       const rows = csvData.trim().split("\n").map(row => row.split(","));
-      if (rows.length < 2) {
-        document.getElementById("errorMessage").textContent = "No data found in the sheet.";
+
+      if (rows.length < 2) { // Check if there's at least a header and one data row
+        allData = []; // No data available
         return;
       }
 
-      const headers = rows[0];
+      const headers = rows[0].map(header => header.trim()); // Trim headers
       const nameIndex = headers.indexOf("Name");
       const bloodIndex = headers.indexOf("Blood Group");
       const contactIndex = headers.indexOf("Contact");
       const addressIndex = headers.indexOf("Address");
+
+      // Ensure all required headers are found
+      if (nameIndex === -1 || bloodIndex === -1 || contactIndex === -1 || addressIndex === -1) {
+          document.getElementById("errorMessage").textContent = "Error: Required columns (Name, Blood Group, Contact, Address) not found in sheet.";
+          allData = [];
+          return;
+      }
 
       allData = rows.slice(1).map(row => ({
         name: row[nameIndex]?.trim() || "N/A",
@@ -229,14 +364,18 @@
       }));
     }
 
+    // Function to filter and display donor data based on selected blood group
     function findData() {
       const selectedGroup = document.getElementById("bloodGroup").value;
       const table = document.getElementById("dataTable");
       const tableBody = document.getElementById("dataBody");
-      tableBody.innerHTML = "";
+      const errorMessageElem = document.getElementById("errorMessage");
+      tableBody.innerHTML = ""; // Clear previous results
+
+      document.getElementById("donorMessage").style.display = "none"; // Hide message initially
 
       if (!selectedGroup) {
-        document.getElementById("errorMessage").textContent = "Please select a blood group.";
+        errorMessageElem.textContent = "Please select a blood group to find donors.";
         table.style.display = "none";
         return;
       }
@@ -244,13 +383,13 @@
       const filtered = allData.filter(donor => donor.blood === selectedGroup);
 
       if (filtered.length === 0) {
-        document.getElementById("errorMessage").textContent = "No donors found for this group.";
+        errorMessageElem.textContent = `No donors found for blood group '${selectedGroup}' in Nepal at the moment.`;
         table.style.display = "none";
         return;
       }
 
-      document.getElementById("errorMessage").textContent = "";
-      table.style.display = "table";
+      errorMessageElem.textContent = ""; // Clear error if results are found
+      table.style.display = "table"; // Show the table
 
       filtered.forEach(d => {
         const row = `<tr>
@@ -262,9 +401,10 @@
         tableBody.innerHTML += row;
       });
 
-      document.getElementById("donorMessage").style.display = "block";
+      document.getElementById("donorMessage").style.display = "block"; // Show motivational message after search
     }
 
+    // Initial data fetch when the page loads
     fetchData();
   </script>
 </body>
