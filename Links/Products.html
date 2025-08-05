@@ -17,7 +17,7 @@
 
 <h2>Product Details</h2>
 
-<input type="text" id="batchInput" placeholder="Enter Batch Number / Product Name">
+<input type="text" id="batchInput" placeholder="Enter Batch Number, Product Name or Division">
 <button id="searchBtn">Search</button>
 <p id="errorMessage"></p>
 
@@ -25,6 +25,11 @@
   <thead>
     <tr>
       <th>Product Name</th>
+      <th>Unit</th>
+      <th>Division</th>
+      <th>In 1 Box/Packet</th>
+      <th>In 1 Blister/Strip</th>
+      <th>In 1 case</th>
       <th>Batch Number</th>
       <th>MRP</th>
       <th>Sales Rate</th>
@@ -87,31 +92,34 @@ function getRemarks(expiryStr) {
 function findBatch() {
   const inputField = document.getElementById("batchInput");
   const inputRaw = inputField.value.trim();
-  const input = inputRaw.padStart(6, '0'); // batch number 6 digits
+  const input = inputRaw.padStart(6, '0');
   const table = document.getElementById("resultTable");
   const tbody = document.getElementById("resultBody");
   document.getElementById("errorMessage").textContent = "";
   tbody.innerHTML = "";
 
   if (!inputRaw) {
-    document.getElementById("errorMessage").textContent = "Please enter a batch number or product name.";
+    document.getElementById("errorMessage").textContent = "Please enter a batch number, product name or division.";
     table.style.display = "none";
     return;
   }
 
-  // First try batch number exact match
-  const batchMatch = batchData.find(entry => (entry["Batch Number"] || '').padStart(6, '0') === input);
-
   let matches = [];
+
+  // First, try an exact match on Batch Number
+  const batchMatch = batchData.find(entry => (entry["Batch Number"] || '').padStart(6, '0') === input);
   if (batchMatch) {
-    matches = [batchMatch]; // exact batch match
+    matches = [batchMatch];
   } else {
-    // Else, search by product name (case insensitive)
-    matches = batchData.filter(entry => (entry["Product Name"] || '').toLowerCase().includes(inputRaw.toLowerCase()));
+    // If no batch number match, search by Product Name or Division
+    matches = batchData.filter(entry => 
+      (entry["Product Name"] || '').toLowerCase().includes(inputRaw.toLowerCase()) || 
+      (entry["Division"] || '').toLowerCase().includes(inputRaw.toLowerCase())
+    );
   }
 
   if (matches.length === 0) {
-    document.getElementById("errorMessage").textContent = "No data found for this batch number or product name.";
+    document.getElementById("errorMessage").textContent = "No data found for this batch number, product name, or division.";
     table.style.display = "none";
     return;
   }
@@ -122,6 +130,11 @@ function findBatch() {
     const remarks = getRemarks(match["Expiry"]);
     return `<tr>
       <td>${match["Product Name"] || "N/A"}</td>
+      <td>${match["Unit"] || "N/A"}</td>
+      <td>${match["Division"] || "N/A"}</td>
+      <td>${match["In 1 box/Packet"] || "N/A"}</td>
+      <td>${match["In 1 Blister/Strip"] || "N/A"}</td>
+      <td>${match["In 1 case"] || "N/A"}</td>
       <td>${formattedBatch}</td>
       <td>${match["MRP"] || "N/A"}</td>
       <td>${match["Sales Rate"] || "N/A"}</td>
