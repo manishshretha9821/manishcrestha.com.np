@@ -35,6 +35,8 @@
       <th>Sales Rate</th>
       <th>Purchase Rate</th>
       <th>Expiry</th>
+      <th>Kathmandu inside</th>
+      <th>Kathmandu outside</th>
       <th>Remarks</th>
     </tr>
   </thead>
@@ -140,6 +142,8 @@ function findBatch() {
       <td>${match["Sales Rate"] || "N/A"}</td>
       <td>${match["Purchase Rate"] || "N/A"}</td>
       <td>${match["Expiry"] || "N/A"}</td>
+      <td>${match["Kathmandu inside"] || "N/A"}</td>
+      <td>${match["Kathmandu outside"] || "N/A"}</td>
       <td>${remarks}</td>
     </tr>`;
   }).join('');
