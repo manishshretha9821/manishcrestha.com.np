@@ -57,7 +57,9 @@
         /* Custom Styles for Overlap: ADJUSTED for Cover Photo */
         margin-top: -100px; /* Moved down to reduce overlap with the cover photo */
         z-index: 10; 
-        position: relative; 
+        position: relative;
+        /* Smaller margin on mobile since buttons are below it */
+        margin-bottom: 20px; 
       }
       
       /* --- NEW COVER PHOTO STYLES --- */
@@ -88,11 +90,58 @@
       /* Adjust the masthead container padding to account for the banner */
       .masthead {
           padding-top: 0 !important; 
+          position: relative; /* IMPORTANT for absolute positioning of the buttons */
       }
       /* --- END NEW COVER PHOTO STYLES --- */
+      
+      /* --- FOLLOW/MESSAGE BUTTON STYLES (Desktop Positioning) --- */
+      .follow-button-container {
+        position: absolute; 
+        top: 280px; /* Aligned vertically with DP */
+        right: 15%; 
+        z-index: 20; 
+      }
+      
+      .message-button-container {
+        position: absolute; 
+        top: 280px; /* Aligned vertically with DP */
+        left: 15%; /* Opposite corner */
+        z-index: 20; 
+      }
+
+      /* Doodle button base style (used for both follow/message links) */
+      .follow-button {
+          border: 2px solid black !important;
+          background-color: white !important;
+          color: black !important;
+          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
+          box-shadow: 4px 4px 0px black !important;
+          font-size: 1.5rem !important;
+          padding: 5px 10px; 
+          text-decoration: none; 
+          white-space: nowrap; 
+      }
+
+      .follow-button:hover {
+          transform: translate(-2px, -2px) rotate(-1deg);
+          box-shadow: 8px 8px 0px black !important;
+          background-color: #ffeb3b !important; 
+          cursor: pointer;
+          color: black !important;
+      }
+      
+      /* Mobile Button Wrapper (Small Screen) */
+      .button-mobile-wrapper {
+          display: flex;
+          justify-content: space-around;
+          width: 100%;
+          margin-bottom: 20px;
+          /* Margin-top needed to lift buttons up closer to the DP on mobile */
+          margin-top: -80px; 
+      }
 
 
-      /* 4. DOODLE BUTTONS */
+      /* 4. DOODLE BUTTONS (for View CV, etc.) */
       button, .btn-primary {
         border: 2px solid black !important;
         background-color: white !important;
@@ -158,8 +207,41 @@
         <div class="cover-photo-container">
             <img class="cover-photo" src="assets/img/portfolio/coverphoto.jpg" alt="Cover Photo Banner" />
         </div>
-      <div class="container d-flex align-items-center flex-column">
+        
+        <div class="message-button-container d-none d-md-block">
+            <a class="follow-button" 
+               href="mailto:mail@manishcrestha.com.np" 
+               rel="noopener norefferrer">
+                <i class="fas fa-fw fa-envelope"></i> Message
+            </a>
+        </div>
+        <div class="follow-button-container d-none d-md-block">
+            <a class="follow-button" 
+               href="http://instagram.com/manishshrestha_" 
+               target="_blank" 
+               rel="noopener norefferrer">
+                <i class="fas fa-fw fa-user-plus"></i> Follow
+            </a>
+        </div>
+        <div class="container d-flex align-items-center flex-column">
+        
         <img class="masthead-avatar mb-5" src="assets/dp icon.png" alt="avatar" />
+        
+        <div class="button-mobile-wrapper d-md-none">
+            
+            <a class="follow-button" 
+               href="mailto:mail@manishcrestha.com.np" 
+               rel="noopener norefferrer">
+                <i class="fas fa-fw fa-envelope"></i> Message
+            </a>
+            
+            <a class="follow-button" 
+               href="http://instagram.com/manishshrestha_" 
+               target="_blank" 
+               rel="noopener norefferrer">
+                <i class="fas fa-fw fa-user-plus"></i> Follow
+            </a>
+        </div>
         <h1 class="masthead-heading text-normal mb-0">Manish</h1>
         <p class="masthead-subheading font-weight-light mb-0">Graphic designer</p>
       </div>
@@ -283,12 +365,9 @@
     
     <footer class="footer text-center">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-5 mb-lg-0">
-                    <h4 class="text-uppercase mb-4"></h4>
-                    <p class="lead mb-0"></p>
-                </div>
-                <div class="col-lg-4 mb-5 mb-lg-0">
+            <div class="row justify-content-center">
+                
+                <div class="col-lg-12 mb-5 mb-lg-0">
                     <h4 class="text-uppercase mb-4">Links</h4>
                     <a class="btn btn-outline-light btn-social mx-1" href="http://instagram.com/manishshrestha_"	target="_blank"	rel="noopener	norefferrer"><i class="fab fa-fw fa-instagram"></i></a>
                     <a class="btn btn-outline-light btn-social mx-1" href="https://www.linkedin.com/in/manishshrestha09"	target="_blank"	rel="noopener	norefferrer"><i class="fab fa-fw fa-linkedin"></i></a>
@@ -297,10 +376,6 @@
                     <a class="btn btn-outline-light btn-social mx-1" href="https://wa.me/9779821231463"	target="_blank"	rel="noopener	norefferrer"><i class="fab fa-fw fa-whatsapp"></i></a>
                 </div>
                 
-                <div class="col-lg-4">
-                  <h4 class="text-uppercase mb-4">Chat</h4>
-                  <a href="mailto:mail@manishcrestha.com.np" class="lead mb-0 text-white">Let's chat over mail!</a>
-                </div>
             </div>
         </div>
     </footer>
