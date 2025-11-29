@@ -46,9 +46,37 @@
         box-shadow: 5px 5px 0px #000 !important; /* Hard "comic book" shadow */
         transition: all 0.2s ease-in-out;
         background: white;
-        padding: 10px;
       }
       
+      /* --- PORTFOLIO ITEM STYLES FOR EXTREME WIDE RATIO (1500:300 LOOK) --- */
+      .portfolio-item {
+          padding: 10px;
+          /* Forces the item to the desired 300px height (1500:300 aspect handled by width/height/object-fit) */
+          height: 300px; 
+          max-width: 100%; 
+          overflow: hidden; 
+          display: flex;
+          align-items: center; 
+          justify-content: center;
+      }
+
+      .portfolio-item .img-fluid {
+          /* Ensures the image fills the new 300px high container */
+          width: 100%;
+          height: 100%;
+          object-fit: cover; /* Crops image to fit the container ratio (5:1) */
+          padding: 0;
+          border: none !important;
+          box-shadow: none !important;
+          border-radius: 0 !important;
+      }
+
+      .modal-content {
+          padding: 10px; /* Re-apply padding here for modals */
+      }
+      /* --- END PORTFOLIO ITEM STYLES --- */
+
+
       /* Fix header image circle */
       .masthead-avatar {
         border-radius: 50% !important;
@@ -140,8 +168,57 @@
           margin-top: 0; 
       }
 
+      /* --- SPACE REDUCTION FIX --- */
+      .page-section {
+          padding-top: 50px !important; /* Reduces space between header and skills section */
+      }
+      /* --- END SPACE REDUCTION FIX --- */
 
-      /* --- CRITICAL MOBILE FIX: Use Media Query to adjust DP position, button size, and new spacing --- */
+      /* --- VERIFIED BADGE STYLES (REALISTIC/NO BOX) --- */
+      .name-and-badge {
+          display: flex;
+          align-items: center; /* Vertically centers the name and badge */
+          justify-content: center; /* Horizontally centers the name and badge group */
+          gap: 10px; /* Space between name and badge */
+      }
+      
+      .verified-badge {
+          width: 30px; /* Adjust size as needed */
+          height: 30px;
+          object-fit: contain; /* Ensures badge fits without distortion */
+          /* ALL BOX/DOODLE STYLES REMOVED FOR REALISTIC APPEARANCE */
+          border: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          background-color: transparent !important;
+          padding: 0 !important;
+      }
+      /* --- END VERIFIED BADGE STYLES --- */
+
+      /* --- PORTFOLIO ICON STYLES (Rectangular Overlay Icon) --- */
+      .doodle-icon-wrapper {
+          display: inline-flex; /* Use inline-flex to center the icon */
+          align-items: center;
+          justify-content: center;
+          padding: 10px 15px; 
+          background-color: #ffeb3b; /* Highlight color */
+          border: 2px solid black !important;
+          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; 
+          box-shadow: 4px 4px 0px black !important;
+          transition: all 0.2s ease-in-out; 
+      }
+      /* Ensure the inner icon is black for contrast */
+      .doodle-icon-wrapper i {
+          color: black !important;
+      }
+      /* Remove standard text color from parent to let the doodle wrapper control the color */
+      .portfolio-item-caption-content {
+          color: initial !important; 
+      }
+      /* --- END PORTFOLIO ICON STYLES --- */
+
+
+      /* --- CRITICAL MOBILE FIX: Use Media Query for Spacing and Size --- */
       @media (max-width: 767.98px) {
           /* Reduce the negative margin to prevent layout issues and unnecessary scrolling */
           .masthead-avatar {
@@ -157,6 +234,15 @@
           .follow-button {
               /* Slightly smaller text for better fit on small screens */
               font-size: 1.3rem !important;
+          }
+          .verified-badge {
+              width: 25px; /* Slightly smaller badge on mobile */
+              height: 25px;
+              gap: 5px; /* Less space on mobile */
+          }
+          /* Reduced height of 150px maintains the 5:1 (1500:300) aspect ratio on mobile for better scrolling */
+          .portfolio-item {
+              height: 150px; 
           }
       }
       /* --- END CRITICAL MOBILE FIX --- */
@@ -248,7 +334,10 @@
         
         <img class="masthead-avatar" src="assets/dp icon.png" alt="avatar" />
         
-        <h1 class="masthead-heading text-normal mb-0">Manish</h1>
+        <div class="name-and-badge">
+            <h1 class="masthead-heading text-normal mb-0">Manish</h1>
+            <img class="verified-badge" src="assets/img/portfolio/verified_badge.png" alt="Verified Badge" /> 
+        </div>
         <p class="masthead-subheading font-weight-light mb-0">Graphic designer</p>
         
         <div class="button-mobile-wrapper d-md-none">
@@ -278,10 +367,13 @@
                 <div class="divider-custom-line"></div>
             </div>
             <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-4 mb-5">
+                
+                <div class="col-12 mb-5">
                     <div class="portfolio-item mx-auto" id="portfolioItem1">
                         <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                            <div class="portfolio-item-caption-content text-center">
+                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
+                            </div>
                         </div>
                         <img class="img-fluid" src="assets/img/portfolio/cabin.png" alt="" />
                     </div>
@@ -293,10 +385,12 @@
                     });
                 </script>
 
-                <div class="col-md-6 col-lg-4 mb-5">
+                <div class="col-12 mb-5">
                     <div class="portfolio-item mx-auto" id="portfolioItem2">
                         <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                            <div class="portfolio-item-caption-content text-center">
+                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
+                            </div>
                         </div>
                         <img class="img-fluid" src="assets/img/portfolio/cake.png" alt="" />
                     </div>
@@ -308,10 +402,12 @@
                     });
                 </script>
 
-                <div class="col-md-6 col-lg-4 mb-5">    
+                <div class="col-12 mb-5">    
                     <div class="portfolio-item mx-auto" id="portfolioItem3">
                         <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                            <div class="portfolio-item-caption-content text-center">
+                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
+                            </div>
                         </div>
                         <img class="img-fluid" src="assets/img/portfolio/circus.png" alt="" />
                     </div>
@@ -323,10 +419,12 @@
                     });
                 </script>
                 
-                <div class="col-md-6 col-lg-4 mb-5 mb-lg-0">
+                <div class="col-12 mb-5 mb-lg-0">
                     <div class="portfolio-item mx-auto" id="portfolioItem4">
                         <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                            <div class="portfolio-item-caption-content text-center">
+                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
+                            </div>
                         </div>
                         <img class="img-fluid" src="assets/img/portfolio/game.png" alt="" />
                     </div>
@@ -338,10 +436,12 @@
                     });
                 </script>
                 
-                <div class="col-md-6 col-lg-4 mb-5 mb-md-0">
+                <div class="col-12 mb-5 mb-md-0">
                     <div class="portfolio-item mx-auto" id="portfolioItem5">
                         <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                            <div class="portfolio-item-caption-content text-center">
+                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
+                            </div>
                         </div>
                         <img class="img-fluid" src="assets/img/portfolio/safe.png" alt="" />
                     </div>
@@ -353,10 +453,12 @@
                     });
                 </script>
 
-                <div class="col-md-6 col-lg-4 mb-5">
+                <div class="col-12 mb-5">
                     <div class="portfolio-item mx-auto" id="portfolioItem6">
                         <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                            <div class="portfolio-item-caption-content text-center">
+                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
+                            </div>
                         </div>
                         <img class="img-fluid" src="assets/img/portfolio/submarine.png" alt="" />
                     </div>
