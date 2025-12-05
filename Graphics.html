@@ -1,74 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="Displays the Graphics portfolio items" />
-        <meta name="author" content="Your Company Name" />
-        <title>Graphics</title>
-        <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-    
-    <body>
-        <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-labelledby="portfolioModal2Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
+<head>
+  <meta charset="UTF-8" />
+  <title>Hand‑drawn stacked photo gallery</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --card-width: min(96vw, 700px);
+      --card-height: calc(var(--card-width) * 0.75);
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      /* Paper texture background */
+      background: #fdfcf7 url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Comic Sans MS", "Patrick Hand", cursive;
+    }
+    .stage {
+      position: relative;
+      width: var(--card-width);
+      height: var(--card-height);
+      perspective: 1200px;
+    }
+    .card {
+      position: absolute;
+      width: var(--card-width);
+      height: var(--card-height);
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fffef9;
+      border: 3px solid #222;
+      touch-action: none;
+      transition: transform 0.2s ease;
+      /* doodle shadow outline */
+      box-shadow:
+        6px 6px 0px rgba(0,0,0,0.25),
+        -3px -3px 0px rgba(0,0,0,0.15),
+        2px 2px 0px rgba(0,0,0,0.2);
+    }
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.1) saturate(1.2) brightness(1.05);
+      clip-path: polygon(2% 2%, 98% 1%, 99% 98%, 1% 97%);
+    }
+    /* Show edges of cards behind */
+    .card:nth-last-child(1) { z-index: 50; }
+    .card:nth-last-child(2) { transform: translateX(-50%) translateY(12px) rotate(-2deg) scale(0.98); z-index: 40; }
+    .card:nth-last-child(3) { transform: translateX(-50%) translateY(24px) rotate(2deg) scale(0.96); z-index: 30; }
+    .card:nth-last-child(4) { transform: translateX(-50%) translateY(36px) rotate(-1deg) scale(0.94); z-index: 20; }
+    .card:nth-last-child(n+5) { transform: translateX(-50%) translateY(48px) scale(0.92); z-index: 10; }
 
-                    <div class="modal-body text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-10">
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal2Label">Graphics</h2>
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
-                                    </div>
-                                    <div class="mb-5">
-                                        <img class="img-fluid rounded mb-4" src="assets/img/portfolio/graphics1.png" alt="Graphic design example 1" />
-                                        <img class="img-fluid rounded mb-4" src="assets/img/portfolio/graphics2.png" alt="Graphic design example 2" />
-                                        <img class="img-fluid rounded mb-4" src="assets/img/portfolio/graphics3.png" alt="Graphic design example 3" />
-                                        <img class="img-fluid rounded mb-4" src="assets/img/portfolio/graphics8.png" alt="Graphic design example 8" />
-                                        <img class="img-fluid rounded mb-4" src="assets/img/portfolio/graphics9.jpg" alt="Graphic design example 9" />
-                                        <img class="img-fluid rounded mb-4" src="assets/img/portfolio/graphics10.png" alt="Graphic design example 10" />
-                                    </div>
-                                    
-                                    <button class="btn btn-primary" id="modalRedirectButton" data-dismiss="modal">
-                                        <i class="fas fa-times fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    /* Hover wobble */
+    .card:hover {
+      transform: translateX(-50%) rotate(-1deg);
+      box-shadow:
+        8px 8px 0px rgba(0,0,0,0.3),
+        -4px -4px 0px rgba(0,0,0,0.2),
+        3px 3px 0px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+  <div id="stage" class="stage">
+    <div class="card"><img src="assets/img/portfolio/graphics1.png" alt="Mountains" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics2.png" alt="Desert" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics3.png" alt="Desert" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics8.png" alt="Desert" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics9.png" alt="Desert" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics10.png" alt="Desert" /></div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="js/scripts.js"></script>
-        
-        <script>
-            // 1. Show the modal automatically on page load
-            $(document).ready(function() {
-                $('#portfolioModal2').modal('show');
-            });
+  </div>
 
-            // 2. Redirect the visitor to the main page after the modal closes
-            $('#portfolioModal2').on('hide.bs.modal', function (e) {
-                // This command changes the current page to your main website URL
-                window.location.href = "https://www.manishcrestha.com.np";
-            });
-        </script>
-    </body>
+  <script>
+    const stage = document.getElementById('stage');
+
+    function getTopCard() {
+      const cards = Array.from(stage.querySelectorAll('.card'));
+      return cards[cards.length - 1];
+    }
+
+    function removeCard(card) {
+      card.remove();
+      attachToTopCard();
+    }
+
+    function animateDismissRight(card) {
+      card.style.transition = 'transform 300ms ease, opacity 300ms ease';
+      card.style.opacity = '0';
+      card.style.transform += ' translateX(180%) rotate(12deg)';
+      setTimeout(() => removeCard(card), 280);
+    }
+
+    function attachDrag(card) {
+      let startX = 0, currentX = 0, dragging = false;
+      const threshold = 150;
+
+      card.addEventListener('pointerdown', e => {
+        dragging = true;
+        startX = e.clientX;
+        currentX = startX;
+      });
+
+      window.addEventListener('pointermove', e => {
+        if (!dragging) return;
+        currentX = e.clientX;
+        const deltaX = currentX - startX;
+        const moveX = Math.max(0, deltaX);
+        card.style.transform = `translateX(calc(-50% + ${moveX}px)) rotate(${moveX/20}deg)`;
+        card.style.opacity = String(Math.max(0.6, 1 - moveX / 600));
+      });
+
+      window.addEventListener('pointerup', e => {
+        if (!dragging) return;
+        dragging = false;
+        const movedX = Math.max(0, e.clientX - startX);
+        if (movedX >= threshold) {
+          animateDismissRight(card);
+        } else {
+          card.style.transition = 'transform 200ms ease';
+          card.style.transform = 'translateX(-50%)';
+          card.style.opacity = '1';
+        }
+      });
+    }
+
+    function attachToTopCard() {
+      const top = getTopCard();
+      if (top && !top._dragAttached) {
+        attachDrag(top);
+        top._dragAttached = true;
+      }
+    }
+
+    attachToTopCard();
+  </script>
+</body>
 </html>
