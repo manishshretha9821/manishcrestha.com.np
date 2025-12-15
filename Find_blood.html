@@ -5,28 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blood Donor Directory</title>
     <style>
-        /* 🎨 General Styling */
-        body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
-        .donor-container { max-width: 800px; margin: 20px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #d9534f; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        /* 1. Base (Mobile-First) Styling */
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f9f9f9; 
+            padding: 10px; 
+        }
+        .donor-container { 
+            max-width: 800px; 
+            margin: 10px auto; 
+            background: white; 
+            padding: 15px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+        h2 { 
+            text-align: center; 
+            color: #d9534f; 
+            border-bottom: 2px solid #eee; 
+            padding-bottom: 8px; 
+            font-size: 20px; 
+        }
         
         /* Dropdown Styling */
-        .filter-area { margin-bottom: 25px; text-align: center; }
+        .filter-area { margin-bottom: 20px; text-align: center; }
         .blood-group-select {
-            width: 80%;
+            width: 95%; 
             max-width: 300px;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #d9534f;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
         }
         
-        /* Table Styling */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        /* Table Responsiveness */
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+        }
+        #donorTable {
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            display: none;
+            /* No min-width needed now, as we hide one column */
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            text-align: left; 
+            white-space: nowrap; 
+        }
         th { background: #d9534f; color: white; }
         tr:nth-child(even) { background-color: #f2f2f2; }
+        
+        /* *** HIDE ADDRESS COLUMN ON PHONES (Mobile-First) *** */
+        .address-column { 
+            display: none; 
+        }
+
+        /* 2. Desktop Adjustments (Media Query) */
+        @media (min-width: 600px) {
+            /* Show the Address column on screens 600px and wider */
+            .address-column {
+                display: table-cell !important; /* Force it to display */
+            }
+            body { padding: 20px; }
+            .donor-container { padding: 30px; margin: 20px auto; }
+            h2 { font-size: 24px; }
+            th, td { padding: 10px; }
+        }
         
         /* Message Styling */
         #errorMessage { color: #5cb85c; font-weight: bold; text-align: center; margin-top: 15px; }
@@ -36,7 +85,7 @@
 <body>
 
 <div class="donor-container">
-    <h2>🩸 Blood Donor Directory</h2>
+    <h2>🩸 Blood Donor Directory (Live Filter)</h2>
 
     <div class="filter-area">
         <label for="bloodGroupSelector" style="display: block; margin-bottom: 10px; font-weight: bold;">
@@ -58,18 +107,19 @@
     <p id="loadingMessage">Loading donor data...</p>
     <p id="errorMessage"></p>
 
-    <table id="donorTable" style="display: none;">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Blood Group</th>
-                <th>Contact</th>
-                <th>Address</th>
-            </tr>
-        </thead>
-        <tbody id="donorBody">
-            </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="donorTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Blood Group</th>
+                    <th>Contact</th>
+                    <th class="address-column">Address</th> </tr>
+            </thead>
+            <tbody id="donorBody">
+                </tbody>
+        </table>
+    </div>
 
 </div>
 
@@ -85,9 +135,8 @@ async function fetchDonorData() {
         const response = await fetch(proxy + donorCsvUrl);
         const text = await response.text();
         
-        // Simple CSV parsing: assumes Name, Blood Group, Contact, Address are in columns A, B, C, D
+        // CSV parsing: assumes Name, Blood Group, Contact, Address are in columns A, B, C, D
         const rows = text.trim().split('\n').map(r => r.split(','));
-        const headers = rows[0];
 
         // Store data starting from the second row (skipping headers)
         donorData = rows.slice(1).map(row => {
@@ -110,18 +159,15 @@ async function fetchDonorData() {
 function filterAndDisplayDonors(bloodGroup) {
     const table = document.getElementById("donorTable");
     const tbody = document.getElementById("donorBody");
-    tbody.innerHTML = ''; // Clear previous results
+    tbody.innerHTML = ''; 
 
-    // 1. Check if a valid blood group is selected
     if (!bloodGroup) {
-        table.style.display = 'none'; // Hide the table if no group is selected
+        table.style.display = 'none'; 
         return;
     }
     
-    // 2. Filter the data
     const matches = donorData.filter(donor => donor.BloodGroup === bloodGroup);
 
-    // 3. Display the table
     table.style.display = 'table';
     
     if (matches.length === 0) {
@@ -129,14 +175,13 @@ function filterAndDisplayDonors(bloodGroup) {
         return;
     }
 
-    // 4. Build the table rows for all matched donors
+    // Pass the Address to the row, but the CSS will control visibility
     const rows = matches.map(donor => `
         <tr>
             <td>${donor.Name}</td>
             <td>${donor.BloodGroup}</td>
             <td>${donor.Contact}</td>
-            <td>${donor.Address}</td>
-        </tr>
+            <td class="address-column">${donor.Address}</td> </tr>
     `).join('');
 
     tbody.innerHTML = rows;
@@ -148,7 +193,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const selector = document.getElementById("bloodGroupSelector");
     
-    // Set a default, non-selectable option when the page loads
     selector.selectedIndex = 0; 
     
     selector.addEventListener("change", function() {
