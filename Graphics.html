@@ -2,17 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Hand‑drawn stacked photo gallery</title>
+  <title>Refined hand‑drawn photo gallery</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    :root {
-      --card-width: min(96vw, 700px);
-      --card-height: calc(var(--card-width) * 0.75);
-    }
     html, body {
       height: 100%;
       margin: 0;
-      /* Paper texture background */
       background: #fdfcf7 url("https://www.transparenttextures.com/patterns/paper-fibers.png");
       display: flex;
       justify-content: center;
@@ -21,47 +16,51 @@
     }
     .stage {
       position: relative;
-      width: var(--card-width);
-      height: var(--card-height);
+      width: 90vw;
+      max-width: 800px;
+      min-height: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       perspective: 1200px;
     }
     .card {
       position: absolute;
-      width: var(--card-width);
-      height: var(--card-height);
-      top: 0;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
       border-radius: 18px;
       overflow: hidden;
       background: #fffef9;
       border: 3px solid #222;
       touch-action: none;
-      transition: transform 0.2s ease;
-      /* doodle shadow outline */
+      transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
       box-shadow:
         6px 6px 0px rgba(0,0,0,0.25),
         -3px -3px 0px rgba(0,0,0,0.15),
         2px 2px 0px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
       display: block;
-      filter: contrast(1.1) saturate(1.2) brightness(1.05);
+      filter: contrast(1.05) saturate(1.1) brightness(1.05);
       clip-path: polygon(2% 2%, 98% 1%, 99% 98%, 1% 97%);
     }
-    /* Show edges of cards behind */
+    /* Stack offsets */
     .card:nth-last-child(1) { z-index: 50; }
-    .card:nth-last-child(2) { transform: translateX(-50%) translateY(12px) rotate(-2deg) scale(0.98); z-index: 40; }
-    .card:nth-last-child(3) { transform: translateX(-50%) translateY(24px) rotate(2deg) scale(0.96); z-index: 30; }
-    .card:nth-last-child(4) { transform: translateX(-50%) translateY(36px) rotate(-1deg) scale(0.94); z-index: 20; }
-    .card:nth-last-child(n+5) { transform: translateX(-50%) translateY(48px) scale(0.92); z-index: 10; }
+    .card:nth-last-child(2) { transform: translate(-50%, -50%) translateY(12px) rotate(-2deg) scale(0.98); z-index: 40; }
+    .card:nth-last-child(3) { transform: translate(-50%, -50%) translateY(24px) rotate(2deg) scale(0.96); z-index: 30; }
+    .card:nth-last-child(4) { transform: translate(-50%, -50%) translateY(36px) rotate(-1deg) scale(0.94); z-index: 20; }
+    .card:nth-last-child(n+5) { transform: translate(-50%, -50%) translateY(48px) scale(0.92); z-index: 10; }
 
     /* Hover wobble */
     .card:hover {
-      transform: translateX(-50%) rotate(-1deg);
+      transform: translate(-50%, -50%) rotate(-1deg);
       box-shadow:
         8px 8px 0px rgba(0,0,0,0.3),
         -4px -4px 0px rgba(0,0,0,0.2),
@@ -71,13 +70,13 @@
 </head>
 <body>
   <div id="stage" class="stage">
-    <div class="card"><img src="assets/img/portfolio/graphics1.png" alt="Mountains" /></div>
-    <div class="card"><img src="assets/img/portfolio/graphics2.png" alt="Desert" /></div>
-    <div class="card"><img src="assets/img/portfolio/graphics3.png" alt="Desert" /></div>
-    <div class="card"><img src="assets/img/portfolio/graphics8.png" alt="Desert" /></div>
-    <div class="card"><img src="assets/img/portfolio/graphics9.png" alt="Desert" /></div>
-    <div class="card"><img src="assets/img/portfolio/graphics10.png" alt="Desert" /></div>
-
+    <!-- Different sized images -->
+    <div class="card"><img src="assets/img/portfolio/graphics10.png" alt="Local" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics2.png" alt="Local" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics3.png" alt="Local" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics8.png" alt="Local" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics9.png" alt="Local" /></div>
+    <div class="card"><img src="assets/img/portfolio/graphics1.png" alt="Local" /></div>
   </div>
 
   <script>
@@ -115,7 +114,7 @@
         currentX = e.clientX;
         const deltaX = currentX - startX;
         const moveX = Math.max(0, deltaX);
-        card.style.transform = `translateX(calc(-50% + ${moveX}px)) rotate(${moveX/20}deg)`;
+        card.style.transform = `translate(calc(-50% + ${moveX}px), -50%) rotate(${moveX/20}deg)`;
         card.style.opacity = String(Math.max(0.6, 1 - moveX / 600));
       });
 
@@ -127,7 +126,7 @@
           animateDismissRight(card);
         } else {
           card.style.transition = 'transform 200ms ease';
-          card.style.transform = 'translateX(-50%)';
+          card.style.transform = 'translate(-50%, -50%)';
           card.style.opacity = '1';
         }
       });
