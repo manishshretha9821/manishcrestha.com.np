@@ -1,100 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Art Work</title>
-        <!-- fontawesome-->
-        <i class="fa-solid fa-xmark"></i>
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500&display=swap'" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
+<head>
+  <meta charset="UTF-8" />
+  <title>Graphics work by Manish</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #fdfdfd;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
+    .gallery {
+      column-count: 3; /* masonry style */
+      column-gap: 20px;
+    }
 
+    .item {
+      display: inline-block;
+      width: 100%;
+      margin: 0 0 20px;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-                <!-- Portfolio Grid Items-->
-                <div class="row justify-content-center">
+    .item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.3s ease;
+    }
 
-    <!-- Portfolio Item 5-->
-    <div class="container">
-        <div class="col-md-6 col-lg-4 mb-5 portfolio-item">
-            <div class="portfolio-item mx-auto">
-                <!-- No need for clicking, directly open the modal -->
-                <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                    <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x" id="openPortfolioModal"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    .item:hover {
+      transform: translateY(-5px) rotate(-1deg);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+    }
 
-    <!-- Portfolio Modals-->
-    <!-- Portfolio Modal 5-->
-    <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-labelledby="portfolioModal5Label" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
-            <div class="modal-content">
+    .item:hover img {
+      transform: scale(1.05);
+    }
 
-                <div class="modal-body text-center">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-8">
-                                <!-- Portfolio Modal - Title-->
-                                <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">Art Work</h2>
-                                <!-- Icon Divider-->
-                                <div class="divider-custom">
-                                    <div class="divider-custom-line"></div>
-                                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                    <div class="divider-custom-line"></div>
-                                </div>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 1.png" alt="" />
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 2.png" alt="" />
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 3.png" alt="" />
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 4.png" alt="" />
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 5.png" alt="" />
-				    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 7.jpg" alt="" />
-				    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 6.png" alt="" />
-		   		    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 8.png" alt="" />
-		   		    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 9.png" alt="" />
-		   		    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/doodle 10.png" alt="" />
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/1.png" alt="" />
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/3.png" alt="" />
-	                            <img class="img-fluid rounded mb-5" src="assets/img/portfolio/Artwork/10.png" alt="" />
-					<a href="https://www.instagram.com/p/CokSY_-JP46//">
-                                <!-- Line separator -->
-                                <div class="line"></div>
-                                <video controls autoplay muted loop width="500">
-                                    <source src="assets/img/portfolio/Speed Art.mp4" type="video/mp4">
-                                    Your browser does not support HTML5 video.
-                                </video>
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeIn 0.4s ease;
+    }
 
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-5"> </p>
+    .lightbox.active {
+      display: flex;
+    }
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    .lightbox img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: zoomIn 0.4s ease;
+    }
 
-    <!-- Bootstrap core JS-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/scripts.js"></script>
-    <script>
-        // JavaScript to trigger modal on page load
-        window.onload = function() {
-            $('#portfolioModal5').modal('show');
-        };
-    </script>
+    .caption {
+      margin-top: 20px;
+      color: #fff;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .close, .prev, .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 50px;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .close {
+      top: 20px;
+      right: 30px;
+      transform: none;
+      font-size: 40px;
+    }
+
+    .prev { left: 30px; }
+    .next { right: 30px; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.9); }
+      to { transform: scale(1); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .gallery { column-count: 2; }
+    }
+    @media (max-width: 600px) {
+      .gallery { column-count: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="gallery">
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics1.png" alt="Graphic 1"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics2.png" alt="Graphic 2"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics3.png" alt="Graphic 3"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics4.jpg" alt="Graphic 4"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics5.png" alt="Graphic 5"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics6.png" alt="Graphic 6"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics7.png" alt="Graphic 7"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics8.png" alt="Graphic 8"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics9.jpg" alt="Graphic 9"></div>
+    <div class="item"><img src="assets/img/portfolio/Graphics/graphics10.png" alt="Graphic 10"></div>
+
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <span class="prev" onclick="changeImage(-1)">&#10094;</span>
+    <img id="lightbox-img" src="" alt="Full size">
+    <span class="next" onclick="changeImage(1)">&#10095;</span>
+    <div class="caption" id="caption"></div>
+  </div>
+
+  <script>
+    const items = document.querySelectorAll('.item img');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const caption = document.getElementById('caption');
+    let currentIndex = 0;
+
+    items.forEach((img, index) => {
+      img.addEventListener('click', () => {
+        currentIndex = index;
+        showImage();
+      });
+    });
+
+    function showImage() {
+      const img = items[currentIndex];
+      lightboxImg.src = img.src.replace(/600\/800|800\/800/, '1200/1600');
+      caption.textContent = img.alt;
+      lightbox.classList.add('active');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+    }
+
+    function changeImage(direction) {
+      currentIndex += direction;
+      if (currentIndex < 0) currentIndex = items.length - 1;
+      if (currentIndex >= items.length) currentIndex = 0;
+      showImage();
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'ArrowLeft') changeImage(-1);
+      if (e.key === 'ArrowRight') changeImage(1);
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+
 </body>
 </html>
