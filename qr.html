@@ -1,515 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Manish | Portfolio</title>
+    <meta name="description" content="Manish Portfolio QR Code" />
+    <meta name="author" content="Manish" />
+    <title>Manish | Support QR</title>
 
     <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Patrick+Hand&family=Baloo+Bhai+2:wght@400;700&display=swap" rel="stylesheet">
-    
-    <link href="css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
     
     <style>
-      /* 1. MAKE THE BACKGROUND LOOK LIKE PAPER */
-      body, header, section, .bg-white {
-        background-color: #fdfbf7 !important; /* Creamy paper color */
-        background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
-        background-size: 20px 20px; /* Subtle dot grid pattern */
-        color: #2c2c2c !important;
-      }
+        /* 1. Page Setup: Center content and doodle background */
+        body {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full screen height */
+            margin: 0;
+            background-color: #fdfbf7; /* Light paper background */
+            background-image: radial-gradient(#d0d0d0 1px, transparent 1px); /* Subtle dot grid pattern */
+            background-size: 20px 20px;
+            color: #2c2c2c;
+            font-family: 'Patrick Hand', cursive;
+            padding: 20px; /* Padding for small screens */
+            box-sizing: border-box;
+        }
+        
+        /* 2. QR Container: The main attractive doodle box */
+        .qr-doodle-box {
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            padding: 40px 50px; /* More padding for visual weight */
+            max-width: 90vw;
+            max-height: 90vh;
+            
+            /* Doodle Style: Wobbly border, maximum shadow, and white background */
+            border: 5px solid #000 !important; /* Thicker border */
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; 
+            box-shadow: 15px 15px 0px #000 !important; /* Larger shadow */
+            background: white;
+            transition: transform 0.2s ease-in-out;
+        }
 
-      /* 2. CHANGE FONTS TO HANDWRITING */
-      h1, h2, h3, h4, h5, h6, .masthead-heading {
-        font-family: 'Amatic SC', cursive !important;
-        letter-spacing: 2px;
-        font-weight: bold;
-      }
-      p, body, a, button, .lead, small, .form-control {
-        font-family: 'Patrick Hand', cursive !important;
-        font-size: 1.2rem;
-      }
-      
-      /* 📌 NEW STYLE: Apply hand-drawn font to the Sanskrit text */
-      .copyright small {
-          font-family: 'Baloo Bhai 2', cursive !important;
-          font-size: 1.3rem !important; /* Slightly larger for better readability */
-          font-weight: 700 !important; /* Bold for better contrast in the footer */
-      }
-      /* --- END NEW STYLE --- */
+        .qr-doodle-box:hover {
+             transform: translate(-2px, -2px) rotate(-0.5deg); /* Subtle wiggle effect on hover */
+             box-shadow: 18px 18px 0px #000 !important;
+        }
+        
+        /* 3. QR Code Image - Perfectly Visible and Framed */
+        .qr-code-image {
+            max-width: 70vmin; 
+            max-height: 70vmin; 
+            width: auto;
+            height: auto;
+            border: 5px solid black; /* A strong frame around the QR */
+            padding: 15px; /* More padding inside the frame */
+            background: white;
+            box-shadow: 8px 8px 0px #000;
+        }
 
-      .copyright small {
-        font-size: 1rem !important;
-      }
+        /* 4. Support Text - Large and Clear */
+        .support-text {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 3rem; /* Made larger */
+            font-weight: bold;
+            color: #2c2c2c; 
+            margin-top: 30px; /* More space below QR */
+            margin-bottom: 0;
+            text-align: center;
+            /* Added a text shadow for comic book effect */
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1); 
+        }
 
-      /* 3. MAKE IMAGES & BOXES LOOK LIKE SKETCHES (Wobbly Borders) */
-      .portfolio-item, .img-fluid, .modal-content {
-        border: 3px solid #000 !important;
-        /* Squircle border for hand-drawn look */
-        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; 
-        box-shadow: 5px 5px 0px #000 !important; /* Hard "comic book" shadow */
-        transition: all 0.2s ease-in-out;
-        background: white;
-      }
-      
-      /* --- PORTFOLIO ITEM STYLES FOR EXTREME WIDE RATIO (1500:300 LOOK) --- */
-      .portfolio-item {
-          padding: 10px;
-          /* Forces the item to the desired 300px height (5:1 aspect on desktop) */
-          height: 300px; 
-          max-width: 100%; 
-          overflow: hidden; 
-          display: flex;
-          align-items: center; 
-          justify-content: center;
-      }
+        /* 5. Return Link - Minimal and non-distracting */
+        .return-link {
+            font-size: 1.5rem;
+            color: #2c2c2c;
+            margin-top: 40px;
+            text-decoration: underline;
+            opacity: 0.7; /* Subtler */
+            transition: opacity 0.2s;
+        }
+        
+        .return-link:hover {
+            opacity: 1;
+            color: #E03D45; /* A subtle highlight color on hover */
+        }
+        
+        /* 6. General text and link styling */
+        p, a, button {
+            font-family: 'Patrick Hand', cursive !important;
+            font-size: 1.2rem;
+            text-decoration: none; /* Remove underline by default */
+        }
 
-      .portfolio-item .img-fluid {
-          /* Ensures the image fills the 300px high container */
-          width: 100%;
-          height: 100%;
-          object-fit: cover; /* Crops image to fit the container ratio */
-          padding: 0;
-          border: none !important;
-          box-shadow: none !important;
-          border-radius: 0 !important;
-      }
-
-      .modal-content {
-          padding: 10px; /* Re-apply padding here for modals */
-      }
-      /* --- END PORTFOLIO ITEM STYLES --- */
-
-
-      /* Fix header image circle */
-      .masthead-avatar {
-        border-radius: 50% !important;
-        border: 5px solid black;
-        box-shadow: 5px 5px 0px #000;
-        /* Custom Styles for Overlap: DESKTOP DEFAULT */
-        margin-top: -100px; 
-        z-index: 10; 
-        position: relative;
-        margin-bottom: 20px; 
-      }
-      
-      /* --- NEW COVER PHOTO STYLES --- */
-      .cover-photo-container {
-          width: 100%;
-          /* Set a standard height for the banner */
-          height: 250px; 
-          overflow: hidden; 
-          margin-bottom: 20px;
-          /* Applying the sketch/doodle style to the container */
-          border: 3px solid #000 !important;
-          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; 
-          box-shadow: 5px 5px 0px #000 !important;
-          background: #e0e0e0; /* Fallback color */
-      }
-
-      .cover-photo {
-          width: 100%;
-          height: 100%;
-          object-fit: cover; 
-          object-position: center; 
-          border: none !important; 
-          border-radius: 0 !important; 
-          box-shadow: none !important;
-          padding: 0;
-      }
-
-      /* Adjust the masthead container padding to account for the banner */
-      .masthead {
-          padding-top: 0 !important; 
-          position: relative; 
-      }
-      /* --- END NEW COVER PHOTO STYLES --- */
-      
-      /* --- FOLLOW/MESSAGE BUTTON STYLES (Desktop Positioning) --- */
-      /* These use absolute positioning, so they are only visible on desktop (d-none d-md-block) */
-      .follow-button-container {
-        position: absolute; 
-        top: 280px; 
-        right: 15%; 
-        z-index: 20; 
-      }
-      
-      .message-button-container {
-        position: absolute; 
-        top: 280px; 
-        left: 15%; 
-        z-index: 20; 
-      }
-
-      /* Doodle button base style (used for both follow/message links) */
-      .follow-button {
-          border: 2px solid black !important;
-          background-color: white !important;
-          color: black !important;
-          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
-          box-shadow: 4px 4px 0px black !important;
-          font-size: 1.5rem !important;
-          padding: 5px 10px; 
-          text-decoration: none; 
-          white-space: nowrap; 
-      }
-
-      .follow-button:hover {
-          transform: translate(-2px, -2px) rotate(-1deg);
-          box-shadow: 8px 8px 0px black !important;
-          background-color: #ffeb3b !important; 
-          cursor: pointer;
-          color: black !important;
-      }
-      
-      /* Mobile Button Wrapper (Small Screen) */
-      .button-mobile-wrapper {
-          display: flex;
-          justify-content: space-around;
-          width: 90%; 
-          margin-bottom: 5px;
-          margin-top: 0; 
-      }
-      
-      /* 📌 SECTION TO ADJUST THE GAP BELOW HEADER */
-      /* --- SPACE REDUCTION FIX --- */
-      .page-section {
-          padding-top: 0px !important; 
-      }
-      /* --- END SPACE REDUCTION FIX --- */
-
-      /* --- VERIFIED BADGE STYLES (REALISTIC/NO BOX) --- */
-      .name-and-badge {
-          display: flex;
-          align-items: center; /* Vertically centers the name and badge */
-          justify-content: center; /* Horizontally centers the name and badge group */
-          gap: 0px; /* Space between name and badge */
-      }
-      
-      .verified-badge {
-          width: 30px; /* Adjust size as needed */
-          height: 30px;
-          object-fit: contain; /* Ensures badge fits without distortion */
-          /* ALL BOX/DOODLE STYLES REMOVED FOR REALISTIC APPEARANCE */
-          border: none !important;
-          border-radius: 0 !important;
-          box-shadow: none !important;
-          background-color: transparent !important;
-          padding: 0 !important;
-      }
-      /* --- END VERIFIED BADGE STYLES --- */
-
-      /* --- PORTFOLIO ICON STYLES (Rectangular Overlay Icon) --- */
-      .doodle-icon-wrapper {
-          display: inline-flex; /* Use inline-flex to center the icon */
-          align-items: center;
-          justify-content: center;
-          padding: 10px 15px; 
-          background-color: #ffeb3b; /* Highlight color */
-          border: 2px solid black !important;
-          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; 
-          box-shadow: 4px 4px 0px black !important;
-          transition: all 0.2s ease-in-out; 
-      }
-      /* Ensure the inner icon is black for contrast */
-      .doodle-icon-wrapper i {
-          color: black !important;
-      }
-      /* Remove standard text color from parent to let the doodle wrapper control the color */
-      .portfolio-item-caption-content {
-          color: initial !important; 
-      }
-      /* --- END PORTFOLIO ICON STYLES --- */
-
-
-      /* --- CRITICAL MOBILE FIX: Use Media Query for Spacing and Size --- */
-      @media (max-width: 767.98px) {
-          /* Reduce the negative margin to prevent layout issues and unnecessary scrolling */
-          .masthead-avatar {
-              margin-top: -50px; /* Reduced overlap for better visual flow on mobile */
-              margin-bottom: 10px; /* Smaller space below DP */
-          }
-          
-          .masthead-subheading {
-              /* Ensure there is space between the title and the buttons below it */
-              margin-bottom: 10px !important; 
-          }
-
-          .follow-button {
-              /* Slightly smaller text for better fit on small screens */
-              font-size: 1.3rem !important;
-          }
-          .verified-badge {
-              width: 25px; /* Slightly smaller badge on mobile */
-              height: 25px;
-          }
-          /* Fix for the gap between name and badge on mobile */
-          .name-and-badge {
-              gap: 5px; 
-          }
-          /* Reduced height of 150px maintains the 5:1 (1500:300) aspect ratio on mobile for better scrolling */
-          .portfolio-item {
-              height: 150px; 
-          }
-      }
-      /* --- END CRITICAL MOBILE FIX --- */
-
-      
-      /* Social icons in footer need to be sketched too */
-      .btn-social {
-        border: 3px solid #000 !important;
-        border-radius: 50% !important; 
-        box-shadow: 3px 3px 0px black !important;
-        padding: 15px; 
-        background-color: #2c3e50 !important;
-        color: white !important;
-      }
-
-      /* Hover effect: makes things wiggle and highlights them */
-      button:hover, .btn-primary:hover, .portfolio-item:hover, .btn-social:hover {
-        transform: translate(-2px, -2px) rotate(-1deg);
-        box-shadow: 8px 8px 0px black !important;
-        background-color: #ffeb3b !important; 
-        cursor: pointer;
-      }
-      
-      /* Fix hover color for social icons */
-      .footer .btn-social:hover {
-        background-color: #ffeb3b !important; 
-        color: black !important;
-      }
-
-      /* 5. Clean up standard Bootstrap separators */
-      .divider-custom-line {
-        background-color: black !important;
-        height: 3px !important;
-        border-radius: 50%;
-      }
-      .divider-custom-icon {
-        color: black !important;
-        font-size: 2rem;
-      }
-      
-      /* Footer colors */
-      .footer {
-        background-color: #2c3e50 !important; 
-      }
-      .copyright {
-        background-color: #1a252f !important;
-      }
-      
-      /* Force modals to also use the handwriting font */
-      .modal-body p, .modal-body h2 {
-        font-family: 'Patrick Hand', cursive !important;
-      }
-
+        @media (max-width: 600px) {
+            .qr-doodle-box {
+                padding: 20px 25px; 
+            }
+            .support-text {
+                font-size: 2rem;
+            }
+            .qr-code-image {
+                padding: 10px;
+            }
+            .return-link {
+                margin-top: 30px;
+            }
+        }
     </style>
 
-  </head>
-  <body id="page-top">
-    <header class="masthead bg-white text-black text-center">
-        <div class="cover-photo-container">
-            <img class="cover-photo" src="assets/img/portfolio/coverphoto.gif" alt="Cover Photo Banner" />
-        </div>
-        
-        <div class="message-button-container d-none d-md-block">
-            <a class="follow-button" 
-               href="mailto:mail@manishcrestha.com.np" 
-               rel="noopener norefferrer">
-                <i class="fas fa-fw fa-envelope"></i> Message
-            </a>
-        </div>
-        <div class="follow-button-container d-none d-md-block">
-            <a class="follow-button" 
-               href="http://instagram.com/manishshrestha_" 
-               target="_blank" 
-               rel="noopener norefferrer">
-                <i class="fas fa-fw fa-user-plus"></i> Follow
-            </a>
-        </div>
-        <div class="container d-flex align-items-center flex-column">
-        
-        <img class="masthead-avatar" src="assets/dp icon.png" alt="avatar" />
-        
-        <div class="name-and-badge">
-            <h1 class="masthead-heading text-normal mb-0">Manish</h1>
-            <img class="verified-badge" src="assets/img/portfolio/verified_badge.png" alt="Verified Badge" /> 
-        </div>
-        <p class="masthead-subheading font-weight-light mb-0">Graphic designer</p> 
-        
-        <div class="button-mobile-wrapper d-md-none">
-            
-            <a class="follow-button" 
-               href="mailto:mail@manishcrestha.com.np" 
-               rel="noopener norefferrer">
-                <i class="fas fa-fw fa-envelope"></i> Message
-            </a>
-            
-            <a class="follow-button" 
-               href="http://instagram.com/manishshrestha_" 
-               target="_blank" 
-               rel="noopener norefferrer">
-                <i class="fas fa-fw fa-user-plus"></i> Follow
-            </a>
-        </div>
-        
-        <a href="qr.html" class="follow-button" style="margin-top: 15px;">
-            <i class="fas fa-qrcode"></i> Display QR Code
-        </a>
-        
-        </div>
-    </header>
+</head>
+<body>
     
-    <section class="page-section portfolio" id="portfolio">
-        <div class="container">
-            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Skills</h2>
-            <div class="divider-custom">
-                <div class="divider-custom-line"></div>
-                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                <div class="divider-custom-line"></div>
-            </div>
-            <div class="row justify-content-center">
-                
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" id="portfolioItem1">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center">
-                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
-                            </div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/cabin.gif" alt="Blog Link Thumbnail" />
-                    </div>
-                </div>
-
-                <script>
-                    document.getElementById("portfolioItem1").addEventListener("click", function() {
-                        window.open("https://themanishshrestha.blogspot.com/", "_blank");
-                    });
-                </script>
-
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" id="portfolioItem2">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center">
-                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
-                            </div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/cake.gif" alt="Graphics Link Thumbnail" />
-                    </div>
-                </div>
-
-                <script>
-                    document.getElementById("portfolioItem2").addEventListener("click", function() {
-                        window.open("Graphics.html", "_blank");
-                    });
-                </script>
-
-                <div class="col-md-6 col-lg-4 mb-5">    
-                    <div class="portfolio-item mx-auto" id="portfolioItem3">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center">
-                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
-                            </div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/circus.gif" alt="Find Blood Link Thumbnail" />
-                    </div>
-                </div>
-
-                <script>
-                    document.getElementById("portfolioItem3").addEventListener("click", function() {
-                        window.open("Find_blood.html", "_blank");
-                    });
-                </script>
-                
-                <div class="col-md-6 col-lg-4 mb-5 mb-lg-0">
-                    <div class="portfolio-item mx-auto" id="portfolioItem4">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center">
-                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
-                            </div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/game.gif" alt="Quote Link Thumbnail" />
-                    </div>
-                </div>
-                
-                <script>
-                    document.getElementById("portfolioItem4").addEventListener("click", function() {
-                        window.open("Quote.html", "_blank");
-                    });
-                </script>
-                
-                <div class="col-md-6 col-lg-4 mb-5 mb-md-0">
-                    <div class="portfolio-item mx-auto" id="portfolioItem5">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center">
-                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
-                            </div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/safe.gif" alt="Art Work Link Thumbnail" />
-                    </div>
-                </div>
-                
-                <script>
-                    document.getElementById("portfolioItem5").addEventListener("click", function() {
-                        window.open("Art_work.html", "_blank");
-                    });
-                </script>
-
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" id="portfolioItem6">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center">
-                                <span class="doodle-icon-wrapper"><i class="fas fa-plus fa-3x"></i></span>
-                            </div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/submarine.gif" alt="Links Page Thumbnail" />
-                    </div>
-                </div>
-
-                <script>
-                    document.getElementById("portfolioItem6").addEventListener("click", function() {
-                        window.open("Links.html", "_blank");
-                    });
-                </script>
-            </div>
-        </div>
-    </section>
-    
-    <footer class="footer text-center">
-        <div class="container">
-            <div class="row justify-content-center">
-                
-                <div class="col-lg-12 mb-5 mb-lg-0">
-                    <h4 class="text-uppercase mb-4">Links</h4>
-                    <a class="btn btn-outline-light btn-social mx-1" href="https://www.instagram.com/channel/AbZo2jxOt-n0oGxt/?igsh=bDR0Nm5jZDBrN2M0"	target="_blank"	rel="noopener	norefferrer"><i class="fab fa-fw fa-instagram"></i></a>
-                    <a class="btn btn-outline-light btn-social mx-1" href="https://www.linkedin.com/in/manishshrestha09"	target="_blank"	rel="noopener	norefferrer"><i class="fab fa-fw fa-linkedin"></i></a>
-                    <a class="btn btn-outline-light btn-social mx-1" href="https://www.youtube.com/watch?v=ajGo94h0JxE&list=PL-czilRjeH04LGDrUoeOIeW_W20sM-wEE"	target="_blank"	rel="noopener	norefferrer"><i class="fab fa-fw fa-youtube"></i></a>
-                    <a class="btn btn-outline-light btn-social mx-1" href="https://www.tiktok.com/@manishshrestha_"	target="_blank"	rel="noopener	norefferrer"><i class="fab fa-fw fa-tiktok"></i></a>
-                    <a class="btn btn-outline-light btn-social mx-1" href="https://wa.me/9779821231463"	target="_blank"	rel="noopener	norefferrer"><i class="fab fa-fw fa-whatsapp"></i></a>
-                </div>
-                
-            </div>
-        </div>
-    </footer>
-    
-    <div class="copyright py-4 text-center text-white">
-        <div class="container"><small>समस्ताः लोकः सुखिनो भवन्तु</small></div>
+    <div class="qr-doodle-box">
+        
+        <img class="qr-code-image" src="assets/img/portfolio/QR.png" alt="Scan QR Code for Support" />
+        
+        <p class="support-text">Buy me a coffee</p>
+        
     </div>
     
-    <div class="scroll-to-top d-lg-none position-fixed">
-        <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a>
-    </div>
+    <a href="index.html" class="return-link">
+        <i class="fas fa-arrow-left"></i> Return to Portfolio
+    </a>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-    <script src="js/scripts.js"></script>
-    
-  </body>
+</body>
 </html>
