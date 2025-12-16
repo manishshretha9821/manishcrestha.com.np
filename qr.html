@@ -25,24 +25,6 @@
         color: #2c2c2c !important;
       }
 
-      /* 📌 MODAL BLUR LOGIC: Class applied to body to blur content when modal is open */
-      /* Target everything on the body EXCEPT the QR modal container itself */
-      .qr-active-blur-target > *:not(#qrCodeModal) {
-          transition: filter 0.3s ease-out;
-      }
-      .qr-active-blur-target.qr-modal-open > *:not(#qrCodeModal) {
-          filter: blur(5px);
-          pointer-events: none; /* Disable interaction with background content */
-      }
-      /* Ensure fixed elements are also blurred and blocked */
-      .qr-active-blur-target.qr-modal-open .scroll-to-top, 
-      .qr-active-blur-target.qr-modal-open .message-button-container,
-      .qr-active-blur-target.qr-modal-open .follow-button-container {
-          filter: blur(5px);
-          pointer-events: none;
-      }
-
-
       /* 2. CHANGE FONTS TO HANDWRITING */
       h1, h2, h3, h4, h5, h6, .masthead-heading {
         font-family: 'Amatic SC', cursive !important;
@@ -60,6 +42,7 @@
           font-size: 1.3rem !important; /* Slightly larger for better readability */
           font-weight: 700 !important; /* Bold for better contrast in the footer */
       }
+      /* --- END NEW STYLE --- */
 
       .copyright small {
         font-size: 1rem !important;
@@ -326,88 +309,10 @@
         font-family: 'Patrick Hand', cursive !important;
       }
 
-      /* 📌 QR MODAL STYLES (Full Screen Overlay) - RESTORED */
-      #qrCodeModal {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-          background-color: rgba(255, 255, 255, 0.75); /* Semi-transparent background */
-          /* Hide by default */
-          opacity: 0;
-          visibility: hidden;
-          transition: opacity 0.3s ease-in-out, visibility 0.3s;
-      }
-
-      #qrCodeModal.visible {
-          opacity: 1;
-          visibility: visible;
-      }
-
-      .qr-modal-content {
-          display: flex;
-          flex-direction: column; 
-          justify-content: center;
-          align-items: center;
-          padding: 20px;
-          max-width: 90vw;
-          max-height: 90vh;
-      }
-
-      .qr-code-image {
-          max-width: 80vmin; 
-          max-height: 80vmin; 
-          width: auto;
-          height: auto;
-          border: 5px solid black;
-          padding: 10px;
-          background: white;
-          box-shadow: 10px 10px 0px #000;
-      }
-
-      .support-text-modal {
-          font-family: 'Patrick Hand', cursive;
-          font-size: 2.5rem; 
-          color: #2c2c2c; 
-          margin-top: 20px; 
-          text-align: center;
-      }
-
-      .close-button {
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          z-index: 1001; 
-          border: 3px solid black !important;
-          background-color: white !important;
-          color: black !important;
-          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
-          box-shadow: 4px 4px 0px black !important;
-          font-family: 'Patrick Hand', cursive;
-          font-size: 1.5rem;
-          padding: 5px 15px; 
-          text-decoration: none; 
-          white-space: nowrap; 
-          transition: all 0.2s ease-in-out;
-      }
-
-      .close-button:hover {
-          transform: translate(-2px, -2px) rotate(-1deg);
-          box-shadow: 8px 8px 0px black !important;
-          background-color: #ffeb3b !important; 
-          cursor: pointer;
-          color: black !important;
-      }
-
     </style>
 
   </head>
-  <body id="page-top" class="qr-active-blur-target"> 
+  <body id="page-top">
     <header class="masthead bg-white text-black text-center">
         <div class="cover-photo-container">
             <img class="cover-photo" src="assets/img/portfolio/coverphoto.gif" alt="Cover Photo Banner" />
@@ -453,6 +358,10 @@
                 <i class="fas fa-fw fa-user-plus"></i> Follow
             </a>
         </div>
+        
+        <a href="qr.html" class="follow-button" style="margin-top: 15px;">
+            <i class="fas fa-qrcode"></i> Display QR Code
+        </a>
         
         </div>
     </header>
@@ -571,22 +480,7 @@
             </div>
         </div>
     </section>
-
-    <section class="page-section text-center" id="support">
-        <div class="container">
-            <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Support My Work</h2>
-            <div class="divider-custom">
-                <div class="divider-custom-line"></div>
-                <div class="divider-custom-icon"><i class="fas fa-heart"></i></div>
-                <div class="divider-custom-line"></div>
-            </div>
-            
-            <button id="showQrButton" class="follow-button" style="margin-top: 15px;">
-                <i class="fas fa-qrcode"></i> Display QR Code
-            </button>
-            
-            </div>
-    </section>
+    
     <footer class="footer text-center">
         <div class="container">
             <div class="row justify-content-center">
@@ -611,63 +505,7 @@
     <div class="scroll-to-top d-lg-none position-fixed">
         <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a>
     </div>
-
-    <div id="qrCodeModal">
-        <div class="qr-modal-content">
-            <a href="https://manishcrestha.com.np" class="close-button" id="closeQrButton">
-                <i class="fas fa-times-circle"></i> Close
-            </a>
-
-            <img class="qr-code-image" src="assets/img/portfolio/QR.png" alt="Scan QR Code" />
-            
-            <p class="support-text-modal">Buy me a coffee</p>
-        </div>
-    </div>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const showButton = document.getElementById('showQrButton');
-            const closeButton = document.getElementById('closeQrButton');
-            // NOTE: Renamed from qrCodeContainer to qrCodeModal for clarity with CSS targeting
-            const qrModal = document.getElementById('qrCodeModal'); 
-            const body = document.getElementById('page-top');
-
-            function openQrModal(event) {
-                event.preventDefault(); // Stop the button from acting like a link if it was one
-                qrModal.classList.add('visible');
-                body.classList.add('qr-modal-open');
-                // Lock scrolling on the body when modal is open
-                document.body.style.overflow = 'hidden'; 
-            }
-
-            function closeQrModal() {
-                // Remove classes immediately for a cleaner visual transition before redirect
-                qrModal.classList.remove('visible');
-                body.classList.remove('qr-modal-open');
-                document.body.style.overflow = '';
-            }
-            
-            // Re-apply event listeners
-            showButton.addEventListener('click', openQrModal);
-
-            // Close when clicking outside the QR content or pressing ESC
-            qrModal.addEventListener('click', function(event) {
-                // If the click target is the modal itself (the semi-transparent overlay)
-                if (event.target === qrModal) {
-                    closeQrModal();
-                }
-            });
-
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && qrModal.classList.contains('visible')) {
-                    closeQrModal();
-                }
-            });
-            
-            // The close button navigates away via its href, but we ensure style cleanup first
-            closeButton.addEventListener('click', closeQrModal);
-        });
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
