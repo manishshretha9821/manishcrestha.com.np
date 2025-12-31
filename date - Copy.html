@@ -3,64 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nepali Date Widget</title>
+    <title>नेपाली क्यालेन्डर</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
             margin: 0; 
-            padding: 0;
-            background-color: transparent; /* No background color */
+            background-color: #f4f7f6; 
             font-family: 'Mukta', sans-serif;
-            display: flex;
-            justify-content: flex-end; /* Pushes to the right */
-            align-items: flex-start;  /* Pushes to the top */
-            height: 100vh;
-            overflow: hidden;
         }
-
         .container { 
-            text-align: right; /* Aligns text to the right */
-            padding: 20px;
-            pointer-events: none; /* Makes it non-interfering */
+            background: white; 
+            padding: 60px; 
+            border-radius: 35px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); 
+            text-align: center;
+            width: 350px;
+            border-bottom: 8px solid #d32f2f;
         }
-
+        .label { 
+            color: #d32f2f; 
+            font-size: 1.2rem; 
+            margin-bottom: 15px; 
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
         .date { 
-            color: #000000; /* Solid Black */
-            font-size: 3.5rem; 
+            color: #2c3e50; 
+            font-size: 5rem; 
             font-weight: 700; 
-            display: block;
             line-height: 1;
-            /* Optional: subtle white glow to make it readable on dark backgrounds */
-            text-shadow: 0 0 10px rgba(255,255,255,0.8);
-        }
-
-        .day {
-            color: #333333; /* Dark Grey */
-            font-size: 1.8rem;
-            font-weight: 400;
+            margin-bottom: 10px;
             display: block;
-            margin-top: 5px;
         }
-
-        .loading { font-size: 1rem; color: #888; }
+        .day {
+            color: #1a73e8; /* Blue color for the day */
+            font-size: 3rem;
+            font-weight: 600;
+            display: block;
+        }
+        .loading { font-style: italic; color: #999; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="display" class="loading">लोड हुँदैछ...</div>
+    <div class="label">आजको मिति र बार</div>
+    <div id="display" class="loading">विवरण लोड हुँदैछ...</div>
 </div>
 
 <script>
-    // Converts English digits to Nepali digits
+    // 1. Converts 123 to १२३
     function toNepaliNum(numStr) {
         const nepaliDigits = {'0':'०','1':'१','2':'२','3':'३','4':'४','5':'५','6':'६','7':'७','8':'८','9':'९'};
         return numStr.toString().replace(/\d/g, m => nepaliDigits[m]);
     }
 
-    // Converts English Day names to Nepali
+    // 2. Converts English Days to Nepali Days
     function toNepaliDay(dayStr) {
         const days = {
             'Sunday': 'आइतबार',
@@ -71,6 +75,7 @@
             'Friday': 'शुक्रबार',
             'Saturday': 'शनिबार'
         };
+        // If the day is found in our list, return Nepali. Otherwise, keep original.
         return days[dayStr.trim()] || dayStr;
     }
 
@@ -88,6 +93,7 @@
             const rawBS = targetRow[1].trim(); 
             const rawDay = targetRow[2].trim(); 
 
+            // Apply conversions
             const finalDate = toNepaliNum(rawBS);
             const finalDay = toNepaliDay(rawDay);
 
@@ -95,8 +101,9 @@
                 <span class="date">${finalDate}</span>
                 <span class="day">${finalDay}</span>
             `;
+            document.getElementById('display').classList.remove('loading');
         } catch (e) {
-            document.getElementById('display').innerHTML = "त्रुटि";
+            document.getElementById('display').innerHTML = "त्रुटि: पुन: प्रयास गर्नुहोस्";
         }
     }
 
