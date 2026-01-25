@@ -3,171 +3,206 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Batch/Product Lookup</title>
+  <title>Batch-lookup-site</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 50px; }
-    input, button { padding: 10px; font-size: 16px; margin: 10px; }
-    table { margin: 20px auto; width: 95%; border-collapse: collapse; background: white; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); display: none; }
-    th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-    th { background: #007bff; color: white; }
-    #errorMessage { color: red; font-weight: bold; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; text-align: center; padding: 20px; color: #333; }
+    .container { max-width: 1300px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    input { padding: 12px; font-size: 16px; width: 300px; border: 2px solid #ddd; border-radius: 6px; outline: none; }
+    button { padding: 12px 24px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .table-wrapper { margin-top: 30px; overflow-x: auto; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; background: white; display: none; min-width: 1000px; }
+    th, td { border: 1px solid #eee; padding: 12px; text-align: left; font-size: 14px; }
+    th { background: #007bff; color: white; font-weight: 600; text-transform: uppercase; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    #errorMessage { color: #dc3545; font-weight: bold; margin-top: 15px; }
+    .status { font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+    .expired { background: #ffdce0; color: #af233a; }
+    .near { background: #fff3cd; color: #856404; }
+    .salable { background: #d4edda; color: #155724; }
   </style>
 </head>
 <body>
 
-<h2>Product Details</h2>
+<div class="container">
+  <h2>Product details</h2>
+  <input type="text" id="batchInput" placeholder="Batch No, Product, or Division...">
+  <button id="searchBtn">Search</button>
+  <p id="errorMessage"></p>
 
-<input type="text" id="batchInput" placeholder="Enter Batch Number, Product Name or Division">
-<button id="searchBtn">Search</button>
-<p id="errorMessage"></p>
-
-<table id="resultTable">
-  <thead>
-    <tr>
-      <th>Product Name</th>
-      <th>Unit</th>
-      <th>Division</th>
-      <th>In 1 Box/Packet</th>
-      <th>In 1 Blister/Strip</th>
-      <th>In 1 case</th>
-      <th>Batch Number</th>
-      <th>MRP</th>
-      <th>Sales Rate</th>
-      <th>Purchase Rate</th>
-      <th>Expiry</th>
-      <th>Kathmandu inside</th>
-      <th>Kathmandu outside</th>
-      <th>Remarks</th>
-    </tr>
-  </thead>
-  <tbody id="resultBody"></tbody>
-</table>
+  <div class="table-wrapper">
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Unit</th>
+          <th>Division</th>
+          <th>Box/Pkt</th>
+          <th>Strip</th>
+          <th>Case</th>
+          <th>Batch</th>
+          <th>MRP</th>
+          <th>Sales</th>
+          <th>Purchase</th>
+          <th>Expiry</th>
+          <th>KTM (In)</th>
+          <th>KTM (Out)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="resultBody"></tbody>
+    </table>
+  </div>
+</div>
 
 <script>
 let batchData = [];
 
-async function fetchCSV() {
-  const proxy = "https://corsproxy.io/?";
-  const csvUrl = proxy + "https://docs.google.com/spreadsheets/d/e/2PACX-1vSMAlrtOL0U2WoM5iDr9DhxpB0s7Khb_oKc2TsBIjkW3gdmG-MoQnuXPwTonum8NNwpOcGntBbwWnpZ/pub?gid=1769485623&single=true&output=csv";
-  try {
-    const response = await fetch(csvUrl);
-    const text = await response.text();
-    const rows = text.trim().split('\n').map(r => r.split(','));
-    const headers = rows[0];
-    batchData = rows.slice(1).map(row => {
-      const entry = {};
-      headers.forEach((h, i) => entry[h.trim()] = row[i]?.trim());
-      return entry;
+function parseCSV(text) {
+  const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
+  if (lines.length === 0) return [];
+  const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+  const headers = lines[0].split(regex).map(h => h.replace(/^"|"$/g, '').trim());
+  return lines.slice(1).map(line => {
+    const values = line.split(regex);
+    const entry = {};
+    headers.forEach((h, i) => {
+      let val = values[i] ? values[i].replace(/^"|"$/g, '').trim() : "N/A";
+      entry[h] = val;
     });
+    return entry;
+  });
+}
+
+async function fetchCSV() {
+  const targetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSMAlrtOL0U2WoM5iDr9DhxpB0s7Khb_oKc2TsBIjkW3gdmG-MoQnuXPwTonum8NNwpOcGntBbwWnpZ/pub?gid=1769485623&single=true&output=csv";
+  const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+  try {
+    const response = await fetch(proxyUrl);
+    if (!response.ok) throw new Error("Could not connect to the data source.");
+    const text = await response.text();
+    if (text.includes("<!DOCTYPE html>")) {
+      throw new Error("Sheet is not public. Please ensure it is 'Published to Web'.");
+    }
+    batchData = parseCSV(text);
   } catch (err) {
-    document.getElementById("errorMessage").textContent = "Failed to load CSV data.";
-    console.error(err);
+    document.getElementById("errorMessage").textContent = "Error: " + err.message;
   }
 }
 
-function parseExpiryMonthYear(expiryStr) {
-  if (!expiryStr) return null;
+function getStatus(expiryStr) {
+  if (!expiryStr || expiryStr === "N/A") return { text: "N/A", class: "" };
   const parts = expiryStr.split("/");
-  if (parts.length !== 2) return null;
-  let [month, year] = parts.map(s => parseInt(s));
+  if (parts.length !== 2) return { text: "Invalid Date", class: "" };
+  let month = parseInt(parts[0]);
+  let year = parseInt(parts[1]);
   if (year < 100) year += 2000;
-  if (month < 1 || month > 12) return null;
-  return { month, year };
-}
-
-function getRemarks(expiryStr) {
-  const expiry = parseExpiryMonthYear(expiryStr);
-  if (!expiry) return "Invalid Date";
-
   const today = new Date();
   const currentMonth = today.getMonth() + 1;
   const currentYear = today.getFullYear();
-
-  const expiryValue = expiry.year * 12 + expiry.month;
+  const expiryValue = year * 12 + month;
   const currentValue = currentYear * 12 + currentMonth;
+  if (expiryValue < currentValue) return { text: "EXPIRED", class: "expired" }; 
+  if (expiryValue <= currentValue + 3) return { text: "NEAR EXPIRY", class: "near" }; 
+  return { text: "SALABLE", class: "salable" }; 
+}
 
-  if (expiryValue <= currentValue) return "Expired"; 
-  if (expiryValue >= currentValue + 1 && expiryValue <= currentValue + 3) return "Near Expiry"; 
-  return "Salable"; 
+// Custom function to handle product-specific batch padding
+function formatBatch(pName, bNumRaw) {
+  const batchInt = parseInt(bNumRaw);
+  if (isNaN(batchInt)) return bNumRaw;
+
+  pName = pName.toLowerCase();
+
+  // Halozema-S Rule
+  if (pName.includes("halozema-s")) {
+    return batchInt <= 7010 ? bNumRaw.padStart(5, '0') : bNumRaw.padStart(6, '0');
+  } 
+  
+  // Clotas-S Rule
+  if (pName.includes("clotas-s")) {
+    return batchInt <= 4012 ? bNumRaw.padStart(5, '0') : bNumRaw.padStart(6, '0');
+  }
+
+  // Default Rule
+  return bNumRaw.padStart(6, '0');
 }
 
 function findBatch() {
   const inputField = document.getElementById("batchInput");
-  const inputRaw = inputField.value.trim();
-  const input = inputRaw.padStart(6, '0');
+  const rawQuery = inputField.value.trim().toLowerCase();
   const table = document.getElementById("resultTable");
   const tbody = document.getElementById("resultBody");
+  
   document.getElementById("errorMessage").textContent = "";
   tbody.innerHTML = "";
 
-  if (!inputRaw) {
-    document.getElementById("errorMessage").textContent = "Please enter a batch number, product name or division.";
+  if (!rawQuery) {
+    document.getElementById("errorMessage").textContent = "Please enter a search term.";
     table.style.display = "none";
     return;
   }
 
-  let matches = [];
+  const matches = batchData.filter(entry => {
+    const pName = (entry["Product Name"] || "").toLowerCase();
+    const dName = (entry["Division"] || "").toLowerCase();
+    let bNumRaw = (entry["Batch Number"] || "");
+    
+    // Get the formatted version of the batch in the data
+    const bNumFormatted = formatBatch(pName, bNumRaw);
 
-  // First, try an exact match on Batch Number
-  const batchMatch = batchData.find(entry => (entry["Batch Number"] || '').padStart(6, '0') === input);
-  if (batchMatch) {
-    matches = [batchMatch];
-  } else {
-    // If no batch number match, search by Product Name or Division
-    matches = batchData.filter(entry => 
-      (entry["Product Name"] || '').toLowerCase().includes(inputRaw.toLowerCase()) || 
-      (entry["Division"] || '').toLowerCase().includes(inputRaw.toLowerCase())
-    );
-  }
+    // Prepare search query matching
+    let isNumericMatch = false;
+    if (/^\d+$/.test(rawQuery)) {
+      // If user types a number, check if it matches the formatted batch
+      const queryFormatted = formatBatch(pName, rawQuery);
+      isNumericMatch = bNumFormatted === queryFormatted;
+    }
+
+    return isNumericMatch || pName.includes(rawQuery) || dName.includes(rawQuery);
+  });
 
   if (matches.length === 0) {
-    document.getElementById("errorMessage").textContent = "No data found for this batch number, product name, or division.";
+    document.getElementById("errorMessage").textContent = "No matches found.";
     table.style.display = "none";
     return;
   }
 
-  // Build table rows
-  const rows = matches.map(match => {
-    const formattedBatch = (match["Batch Number"] || "").padStart(6, '0');
-    const remarks = getRemarks(match["Expiry"]);
-    return `<tr>
-      <td>${match["Product Name"] || "N/A"}</td>
+  matches.forEach(match => {
+    const status = getStatus(match["Expiry"]);
+    const pName = (match["Product Name"] || "");
+    const displayBatch = formatBatch(pName, (match["Batch Number"] || ""));
+
+    const row = `<tr>
+      <td>${pName}</td>
       <td>${match["Unit"] || "N/A"}</td>
       <td>${match["Division"] || "N/A"}</td>
       <td>${match["In 1 box/Packet"] || "N/A"}</td>
       <td>${match["In 1 Blister/Strip"] || "N/A"}</td>
       <td>${match["In 1 case"] || "N/A"}</td>
-      <td>${formattedBatch}</td>
+      <td>${displayBatch}</td>
       <td>${match["MRP"] || "N/A"}</td>
       <td>${match["Sales Rate"] || "N/A"}</td>
       <td>${match["Purchase Rate"] || "N/A"}</td>
       <td>${match["Expiry"] || "N/A"}</td>
       <td>${match["Kathmandu inside"] || "N/A"}</td>
       <td>${match["Kathmandu outside"] || "N/A"}</td>
-      <td>${remarks}</td>
+      <td><span class="status ${status.class}">${status.text}</span></td>
     </tr>`;
-  }).join('');
+    tbody.insertAdjacentHTML('beforeend', row);
+  });
 
-  tbody.innerHTML = rows;
   table.style.display = "table";
-
-  // Clear and focus back
-  inputField.value = "";
-  inputField.focus();
+  inputField.select();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   fetchCSV();
-
   document.getElementById("searchBtn").addEventListener("click", findBatch);
-
-  document.getElementById("batchInput").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-      findBatch();
-    }
+  document.getElementById("batchInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") findBatch();
   });
 });
 </script>
-
 </body>
 </html>
