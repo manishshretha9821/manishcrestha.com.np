@@ -75,10 +75,9 @@ function parseCSV(text) {
   });
 }
 
-// Fetch CSV via allorigins proxy
+// Fetch CSV via PHP proxy
 async function fetchCSV() {
-  const targetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSMAlrtOL0U2WoM5iDr9DhxpB0s7Khb_oKc2TsBIjkW3gdmG-MoQnuXPwTonum8NNwpOcGntBbwWnpZ/pub?gid=1769485623&single=true&output=csv";
-  const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+  const proxyUrl = "/Links/proxy.php"; // PHP proxy
   try {
     const response = await fetch(proxyUrl);
     if (!response.ok) throw new Error("Could not connect to the data source.");
