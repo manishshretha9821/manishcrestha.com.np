@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Batch-lookup-site</title>
+  <title>Batch Lookup Site</title>
   <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; text-align: center; padding: 20px; color: #333; }
     .container { max-width: 1300px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -11,8 +11,8 @@
     button { padding: 12px 24px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
     button:hover { background: #0056b3; }
     .table-wrapper { margin-top: 30px; overflow-x: auto; border-radius: 8px; }
-    table { width: 100%; border-collapse: collapse; background: white; display: none; min-width: 1000px; }
-    th, td { border: 1px solid #eee; padding: 12px; text-align: left; font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; display: none; min-width: 1000px; table-layout: fixed; }
+    th, td { border: 1px solid #eee; padding: 12px; text-align: left; font-size: 14px; overflow-wrap: break-word; }
     th { background: #007bff; color: white; font-weight: 600; text-transform: uppercase; }
     tr:nth-child(even) { background-color: #f9f9f9; }
     #errorMessage { color: #dc3545; font-weight: bold; margin-top: 15px; }
@@ -25,7 +25,7 @@
 <body>
 
 <div class="container">
-  <h2>Product details</h2>
+  <h2>Product Details</h2>
   <input type="text" id="batchInput" placeholder="Batch No, Product, or Division...">
   <button id="searchBtn">Search</button>
   <p id="errorMessage"></p>
@@ -58,6 +58,7 @@
 <script>
 let batchData = [];
 
+// Parse CSV from Google Sheet
 function parseCSV(text) {
   const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
   if (lines.length === 0) return [];
@@ -74,6 +75,7 @@ function parseCSV(text) {
   });
 }
 
+// Fetch CSV via allorigins proxy
 async function fetchCSV() {
   const targetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSMAlrtOL0U2WoM5iDr9DhxpB0s7Khb_oKc2TsBIjkW3gdmG-MoQnuXPwTonum8NNwpOcGntBbwWnpZ/pub?gid=1769485623&single=true&output=csv";
   const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
@@ -81,15 +83,14 @@ async function fetchCSV() {
     const response = await fetch(proxyUrl);
     if (!response.ok) throw new Error("Could not connect to the data source.");
     const text = await response.text();
-    if (text.includes("<!DOCTYPE html>")) {
-      throw new Error("Sheet is not public. Please ensure it is 'Published to Web'.");
-    }
+    if (text.includes("<!DOCTYPE html>")) throw new Error("Sheet is not public. Publish it to web.");
     batchData = parseCSV(text);
   } catch (err) {
     document.getElementById("errorMessage").textContent = "Error: " + err.message;
   }
 }
 
+// Status based on expiry
 function getStatus(expiryStr) {
   if (!expiryStr || expiryStr === "N/A") return { text: "N/A", class: "" };
   const parts = expiryStr.split("/");
@@ -102,38 +103,33 @@ function getStatus(expiryStr) {
   const currentYear = today.getFullYear();
   const expiryValue = year * 12 + month;
   const currentValue = currentYear * 12 + currentMonth;
-  if (expiryValue < currentValue) return { text: "EXPIRED", class: "expired" }; 
-  if (expiryValue <= currentValue + 3) return { text: "NEAR EXPIRY", class: "near" }; 
-  return { text: "SALABLE", class: "salable" }; 
+  if (expiryValue < currentValue) return { text: "EXPIRED", class: "expired" };
+  if (expiryValue <= currentValue + 3) return { text: "NEAR EXPIRY", class: "near" };
+  return { text: "SALABLE", class: "salable" };
 }
 
-// Custom function to handle product-specific batch padding
+// Format batch with custom rules
 function formatBatch(pName, bNumRaw) {
   const batchInt = parseInt(bNumRaw);
   if (isNaN(batchInt)) return bNumRaw;
-
   pName = pName.toLowerCase();
 
-  // Halozema-S Rule
   if (pName.includes("halozema-s")) {
     return batchInt <= 7010 ? bNumRaw.padStart(5, '0') : bNumRaw.padStart(6, '0');
-  } 
-  
-  // Clotas-S Rule
+  }
   if (pName.includes("clotas-s")) {
     return batchInt <= 4012 ? bNumRaw.padStart(5, '0') : bNumRaw.padStart(6, '0');
   }
-
-  // Default Rule
   return bNumRaw.padStart(6, '0');
 }
 
+// Search function
 function findBatch() {
   const inputField = document.getElementById("batchInput");
   const rawQuery = inputField.value.trim().toLowerCase();
   const table = document.getElementById("resultTable");
   const tbody = document.getElementById("resultBody");
-  
+
   document.getElementById("errorMessage").textContent = "";
   tbody.innerHTML = "";
 
@@ -147,19 +143,16 @@ function findBatch() {
     const pName = (entry["Product Name"] || "").toLowerCase();
     const dName = (entry["Division"] || "").toLowerCase();
     let bNumRaw = (entry["Batch Number"] || "");
-    
-    // Get the formatted version of the batch in the data
     const bNumFormatted = formatBatch(pName, bNumRaw);
 
-    // Prepare search query matching
-    let isNumericMatch = false;
+    let numericMatch = false;
     if (/^\d+$/.test(rawQuery)) {
-      // If user types a number, check if it matches the formatted batch
-      const queryFormatted = formatBatch(pName, rawQuery);
-      isNumericMatch = bNumFormatted === queryFormatted;
+      // Partial numeric match
+      const queryFormatted = rawQuery.padStart(6, '0');
+      numericMatch = bNumFormatted.includes(queryFormatted);
     }
 
-    return isNumericMatch || pName.includes(rawQuery) || dName.includes(rawQuery);
+    return numericMatch || pName.includes(rawQuery) || dName.includes(rawQuery);
   });
 
   if (matches.length === 0) {
@@ -196,6 +189,7 @@ function findBatch() {
   inputField.select();
 }
 
+// Initialize
 window.addEventListener('DOMContentLoaded', () => {
   fetchCSV();
   document.getElementById("searchBtn").addEventListener("click", findBatch);
