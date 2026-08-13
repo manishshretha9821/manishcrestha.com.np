@@ -1,205 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Donor Directory</title>
-    <style>
-        /* 1. Base (Mobile-First) Styling */
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #f9f9f9; 
-            padding: 10px; 
-        }
-        .donor-container { 
-            max-width: 800px; 
-            margin: 10px auto; 
-            background: white; 
-            padding: 15px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-        }
-        h2 { 
-            text-align: center; 
-            color: #d9534f; 
-            border-bottom: 2px solid #eee; 
-            padding-bottom: 8px; 
-            font-size: 20px; 
-        }
-        
-        /* Dropdown Styling */
-        .filter-area { margin-bottom: 20px; text-align: center; }
-        .blood-group-select {
-            width: 95%; 
-            max-width: 300px;
-            padding: 10px;
-            border: 2px solid #d9534f;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        
-        /* Table Responsiveness */
-        .table-responsive {
-            overflow-x: auto;
-            width: 100%;
-        }
-        #donorTable {
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 15px; 
-            display: none;
-            /* No min-width needed now, as we hide one column */
-        }
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 8px; 
-            text-align: left; 
-            white-space: nowrap; 
-        }
-        th { background: #d9534f; color: white; }
-        tr:nth-child(even) { background-color: #f2f2f2; }
-        
-        /* *** HIDE ADDRESS COLUMN ON PHONES (Mobile-First) *** */
-        .address-column { 
-            display: none; 
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback Ticket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --kraft:#d9cdb2;
+    --paper:#faf8f2;
+    --ink:#2b2823;
+    --ink-soft:#6b6455;
+    --stamp:#b34632;
+    --teal:#3c6e71;
+    --line:#c9bd9e;
+  }
 
-        /* 2. Desktop Adjustments (Media Query) */
-        @media (min-width: 600px) {
-            /* Show the Address column on screens 600px and wider */
-            .address-column {
-                display: table-cell !important; /* Force it to display */
-            }
-            body { padding: 20px; }
-            .donor-container { padding: 30px; margin: 20px auto; }
-            h2 { font-size: 24px; }
-            th, td { padding: 10px; }
-        }
-        
-        /* Message Styling */
-        #errorMessage { color: #5cb85c; font-weight: bold; text-align: center; margin-top: 15px; }
-        #loadingMessage { text-align: center; color: #777; margin-top: 20px; }
-    </style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--kraft);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(43,40,35,0.07) 1px, transparent 0);
+    background-size:22px 22px;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+  }
+
+  .ticket{
+    width:100%;
+    max-width:560px;
+    background:var(--paper);
+    border-radius:2px;
+    box-shadow:0 18px 40px -12px rgba(43,40,35,0.35);
+    position:relative;
+    overflow:hidden;
+  }
+
+  .ticket-head{
+    padding:36px 40px 24px;
+    border-bottom:2px dashed var(--line);
+    position:relative;
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+  }
+
+  .eyebrow span:last-child{color:var(--ink-soft);}
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:30px;
+    line-height:1.15;
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+
+  .sub{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    line-height:1.5;
+    margin:0;
+    max-width:42ch;
+  }
+
+  .notch{
+    position:absolute;
+    top:50%;
+    width:22px;
+    height:22px;
+    background:var(--kraft);
+    border-radius:50%;
+    transform:translateY(-50%);
+  }
+  .notch.left{left:-11px;}
+  .notch.right{right:-11px;}
+  .ticket-head .notch{top:auto;bottom:-13px;}
+
+  form{padding:28px 40px 36px;}
+
+  .field{margin-bottom:22px;}
+
+  label{
+    display:block;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  label .opt{
+    font-weight:400;
+    color:var(--ink-soft);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    margin-left:6px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  select,
+  textarea{
+    width:100%;
+    padding:11px 12px;
+    border:1.5px solid var(--line);
+    border-radius:4px;
+    background:#fff;
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    color:var(--ink);
+    transition:border-color 0.15s ease;
+  }
+
+  input:focus,select:focus,textarea:focus{
+    outline:none;
+    border-color:var(--teal);
+  }
+
+  textarea{resize:vertical;min-height:96px;line-height:1.5;}
+
+  .submit-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:30px;
+    padding-top:22px;
+    border-top:2px dashed var(--line);
+  }
+
+  .ticket-id{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:0.04em;
+  }
+
+  button{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:12px 26px;
+    background:var(--stamp);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    transition:transform 0.12s ease, background 0.15s ease;
+  }
+  button:hover{background:#9c3b2a;}
+  button:active{transform:scale(0.97);}
+  button:disabled{opacity:0.6;cursor:default;transform:none;}
+
+  .state{
+    display:none;
+    padding:56px 40px;
+    text-align:center;
+  }
+  .state.show{display:block;}
+  .stamp-mark{
+    width:74px;height:74px;
+    border:3px solid var(--teal);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 20px;
+    color:var(--teal);
+    font-size:32px;
+    transform:rotate(-8deg);
+  }
+  .state h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:24px;
+    margin:0 0 8px;
+  }
+  .state p{color:var(--ink-soft);font-size:14.5px;margin:0 0 22px;}
+  .state button{background:transparent;color:var(--teal);border:1.5px solid var(--teal);}
+  .state button:hover{background:var(--teal);color:#fff;}
+
+  .error-msg{
+    display:none;
+    font-size:13px;
+    color:var(--stamp);
+    margin-top:10px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .error-msg.show{display:block;}
+
+  @media (max-width:480px){
+    .ticket-head, form{padding-left:24px;padding-right:24px;}
+    h1{font-size:25px;}
+  }
+</style>
 </head>
 <body>
 
-<div class="donor-container">
-    <h2>🩸 Blood Donor Directory (Live Filter)</h2>
+<div class="ticket">
+  <div class="notch left"></div>
+  <div class="notch right"></div>
 
-    <div class="filter-area">
-        <label for="bloodGroupSelector" style="display: block; margin-bottom: 10px; font-weight: bold;">
-            Select Required Blood Group:
-        </label>
-        <select id="bloodGroupSelector" class="blood-group-select">
-            <option value="" selected disabled>-- Select Blood Group --</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
+  <div id="formView">
+    <div class="ticket-head">
+      <div class="eyebrow">
+        <span>Registration Ticket</span>
+        <span id="dateStamp"></span>
+      </div>
+      <h1>Registration details</h1>
+      <p class="sub">Fill in your details below — takes under a minute.</p>
+    </div>
+
+    <form id="feedbackForm">
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Manish Shrestha" required>
+      </div>
+
+      <div class="field">
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" placeholder="Kathmandu, Nepal" required>
+      </div>
+
+      <div class="field">
+        <label for="contact">Contact Number</label>
+        <input type="text" id="contact" name="contact" placeholder="98XXXXXXXX" required>
+      </div>
+
+      <div class="field">
+        <label for="email">Mail Address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="field">
+        <label for="age">Age</label>
+        <input type="text" id="age" name="age" placeholder="28" required inputmode="numeric">
+      </div>
+
+      <div class="field">
+        <label for="bloodGroup">Blood Group</label>
+        <select id="bloodGroup" name="bloodGroup" required>
+          <option value="" disabled selected>Select blood group</option>
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
         </select>
-    </div>
+      </div>
 
-    <p id="loadingMessage">Loading donor data...</p>
-    <p id="errorMessage"></p>
+      <div class="submit-row">
+        <span class="ticket-id" id="ticketId">ID — pending</span>
+        <button type="submit" id="submitBtn">Submit</button>
+      </div>
+      <div class="error-msg" id="errorMsg">Couldn't send that — check your connection and try again.</div>
+    </form>
+  </div>
 
-    <div class="table-responsive">
-        <table id="donorTable" style="display: none;">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Blood Group</th>
-                    <th>Contact</th>
-                    <th class="address-column">Address</th> </tr>
-            </thead>
-            <tbody id="donorBody">
-                </tbody>
-        </table>
-    </div>
-
+  <div class="state" id="successView">
+    <div class="stamp-mark">&#10003;</div>
+    <h2>Registration received</h2>
+    <p>Thanks — your details have been recorded.</p>
+    <button id="resetBtn">Submit another</button>
+  </div>
 </div>
 
 <script>
-let donorData = [];
-// This is your Donor List URL, similar to the one you provided earlier, but set to output CSV.
-const donorCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQju7JjcIDH-Y_wUuxhvL5MUzkN24Atz85B8uUBJd5SwUCwVKKjRLcpkK7gNNwmcsSb48r-Jpqu4kjl/pub?output=csv";
+  // === CONFIGURE THIS ===
+  // Paste the Web App URL you get after deploying the Apps Script (see instructions).
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXV_FbXV-lm3_PLbnHEkswmkBCG-ou9A3AZEB1zmutn2CZQ3iaG0PFltBuNE2bAi0nvA/exec";
 
-async function fetchDonorData() {
-    const proxy = "https://corsproxy.io/?"; 
-    
+  const form = document.getElementById('feedbackForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const formView = document.getElementById('formView');
+  const successView = document.getElementById('successView');
+  const resetBtn = document.getElementById('resetBtn');
+  const ticketIdEl = document.getElementById('ticketId');
+  const dateStamp = document.getElementById('dateStamp');
+
+  const ticketId = 'REG-' + Math.random().toString(36).slice(2,7).toUpperCase();
+  ticketIdEl.textContent = 'ID — ' + ticketId;
+  dateStamp.textContent = new Date().toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.classList.remove('show');
+
+    if (SCRIPT_URL.includes('PASTE_YOUR')) {
+      errorMsg.textContent = 'Set SCRIPT_URL in the code first (see setup instructions).';
+      errorMsg.classList.add('show');
+      return;
+    }
+
+    const payload = {
+      timestamp: new Date().toISOString(),
+      name: document.getElementById('name').value,
+      address: document.getElementById('address').value,
+      contact: document.getElementById('contact').value,
+      email: document.getElementById('email').value,
+      age: document.getElementById('age').value,
+      bloodGroup: document.getElementById('bloodGroup').value
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
     try {
-        const response = await fetch(proxy + donorCsvUrl);
-        const text = await response.text();
-        
-        // CSV parsing: assumes Name, Blood Group, Contact, Address are in columns A, B, C, D
-        const rows = text.trim().split('\n').map(r => r.split(','));
-
-        // Store data starting from the second row (skipping headers)
-        donorData = rows.slice(1).map(row => {
-            const entry = {};
-            entry.Name = row[0] ? row[0].trim() : "N/A";
-            entry.BloodGroup = row[1] ? row[1].trim() : "N/A"; 
-            entry.Contact = row[2] ? row[2].trim() : "N/A";
-            entry.Address = row[3] ? row[3].trim() : "N/A";
-            return entry;
-        });
-
-        document.getElementById("loadingMessage").style.display = 'none';
-        
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Apps Script web apps don't return CORS headers by default
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      // no-cors means we can't read the response, so we optimistically show success
+      formView.style.display = 'none';
+      successView.classList.add('show');
     } catch (err) {
-        document.getElementById("loadingMessage").textContent = "Failed to load donor data. Please check the sheet's publish settings.";
-        console.error("Fetch error:", err);
+      errorMsg.textContent = "Couldn't send that — check your connection and try again.";
+      errorMsg.classList.add('show');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
     }
-}
+  });
 
-function filterAndDisplayDonors(bloodGroup) {
-    const table = document.getElementById("donorTable");
-    const tbody = document.getElementById("donorBody");
-    tbody.innerHTML = ''; 
-
-    if (!bloodGroup) {
-        table.style.display = 'none'; 
-        return;
-    }
-    
-    const matches = donorData.filter(donor => donor.BloodGroup === bloodGroup);
-
-    table.style.display = 'table';
-    
-    if (matches.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4">No donors found for the selected blood group.</td></tr>`;
-        return;
-    }
-
-    // Pass the Address to the row, but the CSS will control visibility
-    const rows = matches.map(donor => `
-        <tr>
-            <td>${donor.Name}</td>
-            <td>${donor.BloodGroup}</td>
-            <td>${donor.Contact}</td>
-            <td class="address-column">${donor.Address}</td> </tr>
-    `).join('');
-
-    tbody.innerHTML = rows;
-}
-
-// Event Listeners (Triggers the filter on selection)
-window.addEventListener('DOMContentLoaded', () => {
-    fetchDonorData();
-
-    const selector = document.getElementById("bloodGroupSelector");
-    
-    selector.selectedIndex = 0; 
-    
-    selector.addEventListener("change", function() {
-        const selectedGroup = this.value;
-        filterAndDisplayDonors(selectedGroup);
-    });
-});
+  resetBtn.addEventListener('click', () => {
+    form.reset();
+    successView.classList.remove('show');
+    formView.style.display = 'block';
+    errorMsg.classList.remove('show');
+  });
 </script>
 
 </body>
