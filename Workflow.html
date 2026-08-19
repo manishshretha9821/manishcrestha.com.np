@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FFFDF9;
+    --ink: #2B2B2B;
+    --coral: #FF6B5B;
+    --sky: #4EC3E0;
+    --sun: #FFC94A;
+    --mint: #6FCF97;
+    --card: #FFFFFF;
+    --shadow: rgba(43,43,43,0.12);
+  }
+  .ig-block{
+    max-width: 980px;
+    margin: 3.5rem auto;
+    padding: 0 1.5rem;
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+  }
+  .ig-block-head{
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .ig-block-head h2{
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.9rem;
+    color: var(--ink);
+    margin: 0 0 0.3rem;
+  }
+  .ig-block-head p{
+    margin: 0;
+    color: #8a8a8a;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .ig-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1.4rem;
+  }
+
+  .ig-card{
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--card);
+    border-radius: 22px;
+    padding: 10px;
+    box-shadow: 0 6px 0 var(--shadow);
+    border: 3px solid var(--ink);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .ig-card:hover{
+    transform: translateY(-6px) rotate(-1deg);
+    box-shadow: 0 10px 0 var(--shadow);
+  }
+  .ig-card:nth-child(1){ --accent: var(--coral); }
+  .ig-card:nth-child(2){ --accent: var(--sky); }
+  .ig-card:nth-child(3){ --accent: var(--sun); }
+
+  .ig-thumb{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--accent);
+  }
+  .ig-thumb img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ig-sticker{
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    transform: rotate(-6deg);
+  }
+
+  .ig-play{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2.5px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ig-play svg{ width: 13px; height: 13px; margin-left: 2px; }
+
+  .ig-caption{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 4px 2px;
+  }
+  .ig-caption p{
+    margin: 0;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .ig-arrow{
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  .ig-card:hover .ig-arrow{ transform: translateX(3px) rotate(-45deg); }
+  .ig-arrow svg{ width: 11px; height: 11px; }
+</style>
+</head>
+<body>
+
+<section class="ig-block">
+  <div class="ig-block-head">
+    <h2>Watch the Workflow</h2>
+    <p>tap a card to see it on Instagram</p>
+  </div>
+
+  <div class="ig-grid">
+
+    <!-- Card 1 -->
+    <a class="ig-card" href="https://www.instagram.com/p/DcJXeCBjR9g/?img_index=2" target="_blank" rel="noopener noreferrer">
+      <div class="ig-thumb">
+        <img src="assets/img/portfolio/Artwork/Aarati-Artwork.jpg" alt="Workflow preview 1" onerror="this.style.display='none'">
+        <div class="ig-sticker">REEL</div>
+        <div class="ig-play">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 3v18l16-9L4 3z" fill="#2B2B2B"/></svg>
+        </div>
+      </div>
+      <div class="ig-caption">
+        <p>Workflow 01</p>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#2B2B2B" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+    </a>
+
+    <!-- Card 2 -->
+    <a class="ig-card" href="https://www.instagram.com/p/DZm8hcft-6g/" target="_blank" rel="noopener noreferrer">
+      <div class="ig-thumb">
+        <img src="assets/img/portfolio/Artwork/Swami carrying me.png" alt="Workflow preview 2" onerror="this.style.display='none'">
+        <div class="ig-sticker">REEL</div>
+        <div class="ig-play">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 3v18l16-9L4 3z" fill="#2B2B2B"/></svg>
+        </div>
+      </div>
+      <div class="ig-caption">
+        <p>Workflow 02</p>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#2B2B2B" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+</body>
+</html>
