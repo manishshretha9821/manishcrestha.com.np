@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral: #FF6B5B;
+    --sky: #4EC5E8;
+    --yellow: #FFC93C;
+    --ink: #1B1B1B;
+    --cream: #FFFBF2;
+    --card: #FFFFFF;
+    --shadow-offset: 6px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  /* scattered background dots, purely decorative */
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    z-index: 0;
+    opacity: 0.5;
+  }
+  body::before {
+    background: var(--yellow);
+    top: -40px;
+    left: -50px;
+  }
+  body::after {
+    background: var(--sky);
+    bottom: -60px;
+    right: -40px;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 24px;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--ink);
+    padding: 36px 30px;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--yellow);
+    border: 2.5px solid var(--ink);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    box-shadow: 3px 3px 0 var(--ink);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 800;
+    font-size: 1.9rem;
+    line-height: 1.15;
+    margin: 0 0 26px;
+  }
+
+  h1 span {
+    color: var(--coral);
+  }
+
+  p.sub {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #4a4a4a;
+    margin: 0 0 26px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  label {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  input[type="email"],
+  textarea {
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    padding: 12px 14px;
+    border: 2.5px solid var(--ink);
+    border-radius: 14px;
+    background: var(--cream);
+    resize: vertical;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+
+  textarea { min-height: 120px; }
+
+  input[type="email"]:focus,
+  textarea:focus {
+    outline: none;
+    box-shadow: 3px 3px 0 var(--sky);
+    transform: translate(-1px, -1px);
+  }
+
+  button {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+    background: var(--coral);
+    border: 2.5px solid var(--ink);
+    border-radius: 14px;
+    padding: 14px 20px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    margin-top: 6px;
+  }
+
+  button:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  button:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .status {
+    margin-top: 16px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 2.5px solid var(--ink);
+    display: none;
+  }
+
+  .status.show { display: block; }
+
+  .status.ok {
+    background: #DFF6E0;
+  }
+
+  .status.err {
+    background: #FFE0DB;
+  }
+
+  .field-hint {
+    font-size: 0.82rem;
+    color: #6a6a6a;
+    margin-top: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="card">
+    <span class="tag">got a sec?</span>
+    <h1>Tell me what you <span>really</span> think.</h1>
+
+    <form id="feedbackForm">
+      <div>
+        <label for="email">Your email address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+
+      <div>
+        <label for="feedback">Your feedback</label>
+        <textarea id="feedback" name="feedback" placeholder="Be as honest as you want..." required></textarea>
+      </div>
+
+      <button type="submit" id="submitBtn">Send feedback</button>
+
+      <div class="status" id="statusBox"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Replace this with your deployed Google Apps Script Web App URL
+  // (see the setup instructions provided alongside this file).
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby87-Y9dW2vszicNwmX_Uh15QliMRQvF7kgwudpp6bNiDaWUFSK072GDHzIke2KYXG5hA/exec";
+
+  const form = document.getElementById('feedbackForm');
+  const btn = document.getElementById('submitBtn');
+  const statusBox = document.getElementById('statusBox');
+
+  function showStatus(message, type) {
+    statusBox.textContent = message;
+    statusBox.className = 'status show ' + type;
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+    const feedback = document.getElementById('feedback').value.trim();
+
+    if (!email || !feedback) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    statusBox.className = 'status';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ email: email, feedback: feedback })
+      });
+
+      // no-cors means we can't read the response, so we assume success
+      // if the request didn't throw.
+      showStatus("Thanks — that landed in my inbox!", 'ok');
+      form.reset();
+    } catch (err) {
+      showStatus("Hmm, that didn't send. Try again in a bit?", 'err');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send feedback';
+    }
+  });
+</script>
+
+</body>
+</html>
