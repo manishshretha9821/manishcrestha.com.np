@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Feedback</title>
+<title>Message</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -117,7 +117,7 @@
     display: block;
   }
 
-  input[type="email"],
+  input[type="mail"],
   textarea {
     width: 100%;
     font-family: 'Nunito', sans-serif;
@@ -132,7 +132,7 @@
 
   textarea { min-height: 120px; }
 
-  input[type="email"]:focus,
+  input[type="mail"]:focus,
   textarea:focus {
     outline: none;
     box-shadow: 3px 3px 0 var(--sky);
@@ -212,8 +212,8 @@
 
     <form id="feedbackForm">
       <div>
-        <label for="email">Your email address</label>
-        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        <label for="mail">Your mail address</label>
+        <input type="mail" id="mail" name="mail" placeholder="you@example.com" required>
       </div>
 
       <div>
@@ -245,10 +245,10 @@
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const email = document.getElementById('email').value.trim();
+    const mail = document.getElementById('mail').value.trim();
     const feedback = document.getElementById('feedback').value.trim();
 
-    if (!email || !feedback) return;
+    if (!mail || !feedback) return;
 
     btn.disabled = true;
     btn.textContent = 'Sending...';
@@ -259,7 +259,7 @@
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ email: email, feedback: feedback })
+        body: new URLSearchParams({ mail: mail, feedback: feedback })
       });
 
       // no-cors means we can't read the response, so we assume success
