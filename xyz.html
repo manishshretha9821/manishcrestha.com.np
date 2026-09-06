@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Logins</title>
+<style>
+  :root {
+    --border: #d0d7de;
+    --header-bg: #1a5c1a;
+    --header-fg: #ffffff;
+    --row-alt: #f6f8fa;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --success: #16a34a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #fafafa;
+    margin: 0;
+    padding: 24px;
+    color: #1f2328;
+  }
+  h1 {
+    font-size: 18px;
+    margin: 0 0 16px 0;
+  }
+  .search-bar {
+    margin-bottom: 12px;
+  }
+  .search-bar input {
+    width: 100%;
+    max-width: 320px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  thead th {
+    background: var(--header-bg);
+    color: var(--header-fg);
+    text-align: left;
+    padding: 10px 12px;
+    position: sticky;
+    top: 0;
+  }
+  tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: #eef4ff; }
+  .use-for { font-style: italic; font-weight: 600; }
+  .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+  }
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12.5px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .copy-btn:hover { background: var(--accent-hover); }
+  .copy-btn.copied { background: var(--success); }
+  tr.hidden { display: none; }
+
+  /* Lock screen */
+  #lockScreen {
+    position: fixed;
+    inset: 0;
+    background: #1a5c1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .lock-box {
+    background: #fff;
+    padding: 32px 28px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+  .lock-box h2 {
+    margin: 0 0 4px 0;
+    font-size: 17px;
+  }
+  .lock-box p {
+    margin: 0 0 16px 0;
+    font-size: 13px;
+    color: #57606a;
+  }
+  .lock-box input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .lock-box button {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .lock-box button:hover { background: var(--accent-hover); }
+  #lockError {
+    color: #d1242f;
+    font-size: 12.5px;
+    margin-top: 8px;
+    min-height: 16px;
+  }
+  #appContent { display: none; }
+</style>
+</head>
+<body>
+
+<div id="lockScreen">
+  <div class="lock-box">
+    <h2>🔒 Protected</h2>
+    <p>Enter password to view logins</p>
+    <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter') checkPassword()">
+    <button onclick="checkPassword()">Unlock</button>
+    <div id="lockError"></div>
+  </div>
+</div>
+
+<div id="appContent">
+<h1>My Logins</h1>
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search by 'Use for'..." oninput="filterRows()">
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Use for</th>
+      <th>Username</th>
+      <th>Log in password</th>
+      <th>Copy</th>
+    </tr>
+  </thead>
+  <tbody id="tableBody">
+    <!-- rows injected here -->
+  </tbody>
+</table>
+</div>
+
+<script>
+const SITE_PASSWORD = "Manish@123";
+
+function checkPassword() {
+  const entered = document.getElementById("pwInput").value;
+  if (entered === SITE_PASSWORD) {
+    document.getElementById("lockScreen").style.display = "none";
+    document.getElementById("appContent").style.display = "block";
+  } else {
+    document.getElementById("lockError").textContent = "Incorrect password. Try again.";
+    document.getElementById("pwInput").value = "";
+    document.getElementById("pwInput").focus();
+  }
+}
+
+const data = [
+  ["Global Ime Bank", "9821231463", "Sairam@12"],
+  ["Prabhu Bank", "9821231463", "Sairam@1"],
+  ["Esewa", "9821231463", "Manishesewa@2025"],
+  ["Facebook", "themanish.shrestha", "Manishfacebook@2025"],
+  ["Instagram", "manishshrestha_", "Manishdon@1"],
+  ["ntc.net.np", "Manish Shrestha", "Manishntc@2025"],
+  ["Zoom", "themanish.shrestha@gmail.com", "Manishzoom@2025"],
+  ["Social Security Fund", "20790437463", "Manish@1"],
+  ["Notion.so", "themanish.shrestha@gmail.com", "Manishnotion@2025"],
+  ["n8n.io", "themanish.shrestha@gmail.com", "Manishn8n@2025"],
+  ["whatsapp", "Manishwhatsapp@2025", "personal"],
+  ["Standard Chartered", "themanish.shrestha@gmail.com", "Manishsd@2025"],
+  ["Redmi", "Themanish.shrestha@gmail.com", "Manishredmi@2025"],
+  ["राजस्व", "themanishshrestha", "Manish@123"],
+  [".com.np domain", "themanish.shrestha@gmail.com", "Manishdomain@2026"]
+];
+
+const tbody = document.getElementById("tableBody");
+
+data.forEach(([useFor, username, password], idx) => {
+  const tr = document.createElement("tr");
+
+  const tdUse = document.createElement("td");
+  tdUse.className = "use-for";
+  tdUse.textContent = useFor;
+
+  const tdUser = document.createElement("td");
+  tdUser.className = "mono";
+  tdUser.textContent = username;
+
+  const tdPass = document.createElement("td");
+  tdPass.className = "mono";
+  tdPass.textContent = password;
+
+  const tdCopy = document.createElement("td");
+  const btn = document.createElement("button");
+  btn.className = "copy-btn";
+  btn.textContent = "Copy";
+  btn.addEventListener("click", () => copyPassword(password, btn));
+  tdCopy.appendChild(btn);
+
+  tr.appendChild(tdUse);
+  tr.appendChild(tdUser);
+  tr.appendChild(tdPass);
+  tr.appendChild(tdCopy);
+  tr.dataset.useFor = useFor.toLowerCase();
+
+  tbody.appendChild(tr);
+});
+
+function copyPassword(pw, btn) {
+  navigator.clipboard.writeText(pw).then(() => {
+    const original = btn.textContent;
+    btn.textContent = "Copied!";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove("copied");
+    }, 1200);
+  }).catch(() => {
+    // fallback for older browsers
+    const ta = document.createElement("textarea");
+    ta.value = pw;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    btn.textContent = "Copied!";
+    setTimeout(() => btn.textContent = "Copy", 1200);
+  });
+}
+
+function filterRows() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  document.querySelectorAll("#tableBody tr").forEach(tr => {
+    tr.classList.toggle("hidden", !tr.dataset.useFor.includes(q));
+  });
+}
+</script>
+
+</body>
+</html>
