@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documents — Manish</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAFAF8;
+    --ink:#1A1A1A;
+    --line:#DDDBD5;
+    --muted:#767469;
+    --accent:#8A8672;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    padding:80px 32px;
+  }
+
+  .gallery-wrap{
+    max-width:840px;
+    margin:0 auto;
+  }
+
+  .gallery-eyebrow{
+    font-size:12.5px;
+    letter-spacing:.06em;
+    color:var(--muted);
+    margin:0 0 10px;
+  }
+
+  .gallery-heading{
+    font-family:'Source Serif 4',serif;
+    font-weight:600;
+    font-size:clamp(26px,4vw,34px);
+    margin:0 0 44px;
+    padding-bottom:24px;
+    border-bottom:1px solid var(--line);
+  }
+
+  .doc-list{
+    display:flex;
+    flex-direction:column;
+  }
+
+  .doc-row{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    padding:22px 4px;
+    border-bottom:1px solid var(--line);
+    background:none;
+    border-left:none;
+    border-right:none;
+    border-top:none;
+    text-align:left;
+    width:100%;
+    cursor:pointer;
+    font-family:inherit;
+    color:inherit;
+    transition:background-color .15s ease;
+  }
+
+  .doc-row:first-child{
+    border-top:1px solid var(--line);
+  }
+
+  .doc-row:hover{
+    background-color:#F1F0EB;
+  }
+
+  .doc-thumb{
+    flex:0 0 auto;
+    width:52px;
+    height:68px;
+    border:1px solid var(--line);
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  .doc-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .doc-thumb .fallback{
+    font-size:9px;
+    color:var(--muted);
+    text-align:center;
+    letter-spacing:.04em;
+  }
+
+  .doc-info{
+    flex:1 1 auto;
+    min-width:0;
+  }
+
+  .doc-name{
+    font-size:15.5px;
+    font-weight:500;
+    margin:0 0 3px;
+  }
+
+  .doc-meta{
+    font-size:13px;
+    color:var(--muted);
+    margin:0;
+  }
+
+  .doc-action{
+    flex:0 0 auto;
+    font-size:13px;
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+
+  .doc-row:hover .doc-action{ color:var(--ink); }
+
+  .doc-action svg{
+    width:13px;
+    height:13px;
+    stroke:currentColor;
+  }
+
+  /* Lightbox */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(20,20,18,.94);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:40px 24px;
+    z-index:100;
+  }
+
+  .lightbox.open{ display:flex; }
+
+  .lightbox-inner{
+    max-width:520px;
+    width:100%;
+    text-align:center;
+  }
+
+  .lightbox-inner img{
+    width:100%;
+    max-height:72vh;
+    object-fit:contain;
+    background:#fff;
+    border:1px solid rgba(255,255,255,.12);
+  }
+
+  .lightbox-title{
+    font-family:'Source Serif 4',serif;
+    font-size:15px;
+    color:#EFEEE9;
+    margin:20px 0 0;
+    font-weight:500;
+  }
+
+  .lightbox-close{
+    position:fixed;
+    top:28px;
+    right:32px;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:transparent;
+    border:1px solid rgba(255,255,255,.3);
+    font-size:18px;
+    line-height:1;
+    cursor:pointer;
+    color:#EFEEE9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:border-color .15s ease, background-color .15s ease;
+  }
+
+  .lightbox-close:hover{
+    border-color:rgba(255,255,255,.7);
+    background-color:rgba(255,255,255,.06);
+  }
+
+  @media (max-width:520px){
+    .doc-meta{ display:none; }
+    .doc-action span{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .doc-row, .lightbox-close{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gallery-wrap">
+  <p class="gallery-eyebrow">Verification</p>
+  <h2 class="gallery-heading">Documents</h2>
+
+  <div class="doc-list">
+
+    <button class="doc-row" data-full="assets/img/portfolio/Document/Passport size photo - Manish.JPG" data-title="Passport Size Photo">
+      <span class="doc-thumb">
+        <img src="assets/img/portfolio/Document/Passport size photo - Manish.JPG" alt="Passport size photo"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="fallback" style="display:none;">PHOTO</span>
+      </span>
+      <span class="doc-info">
+        <p class="doc-name">Passport Size Photo</p>
+        <p class="doc-meta">Identity</p>
+      </span>
+      <span class="doc-action">
+        <span>View</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg>
+      </span>
+    </button>
+
+    <button class="doc-row" data-full="assets/img/portfolio/Document/Academic Certificate - Manish.JPG" data-title="Academic Certificate">
+      <span class="doc-thumb">
+        <img src="assets/img/portfolio/Document/Academic Certificate - Manish.JPG" alt="Academic certificate"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="fallback" style="display:none;">CERT</span>
+      </span>
+      <span class="doc-info">
+        <p class="doc-name">Academic Certificate</p>
+        <p class="doc-meta">Education</p>
+      </span>
+      <span class="doc-action">
+        <span>View</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg>
+      </span>
+    </button>
+
+    <button class="doc-row" data-full="assets/img/portfolio/Document/Experience Certificate - Manish.JPG" data-title="Experience Certificate">
+      <span class="doc-thumb">
+        <img src="assets/img/portfolio/Document/Experience Certificate - Manish.JPG" alt="Experience certificate"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="fallback" style="display:none;">CERT</span>
+      </span>
+      <span class="doc-info">
+        <p class="doc-name">Experience Certificate</p>
+        <p class="doc-meta">Work history</p>
+      </span>
+      <span class="doc-action">
+        <span>View</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg>
+      </span>
+    </button>
+
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <div class="lightbox-inner">
+    <img id="lightboxImg" src="" alt="">
+    <p class="lightbox-title" id="lightboxTitle"></p>
+  </div>
+</div>
+
+<script>
+  const rows = document.querySelectorAll('.doc-row');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxTitle = document.getElementById('lightboxTitle');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  rows.forEach(row => {
+    row.addEventListener('click', () => {
+      lightboxImg.src = row.dataset.full;
+      lightboxImg.alt = row.dataset.title;
+      lightboxTitle.textContent = row.dataset.title;
+      lightbox.classList.add('open');
+    });
+  });
+
+  function closeLightbox(){ lightbox.classList.remove('open'); }
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLightbox(); });
+</script>
+
+</body>
+</html>
