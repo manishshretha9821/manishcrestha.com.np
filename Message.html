@@ -33,6 +33,7 @@
     align-items: center;
     justify-content: center;
     padding: 32px 16px;
+    overflow-x: hidden;
   }
 
   /* scattered background dots, purely decorative */
@@ -117,7 +118,7 @@
     display: block;
   }
 
-  input[type="mail"],
+  input[type="email"],
   textarea {
     width: 100%;
     font-family: 'Nunito', sans-serif;
@@ -132,7 +133,7 @@
 
   textarea { min-height: 120px; }
 
-  input[type="mail"]:focus,
+  input[type="email"]:focus,
   textarea:focus {
     outline: none;
     box-shadow: 3px 3px 0 var(--sky);
@@ -207,11 +208,14 @@
 
 <div class="wrap">
   <div class="card">
+    <span class="tag">Feedback</span>
+    <h1>Got a <span>thought</span> to share?</h1>
+    <p class="sub">Drop your email and a message below — it goes straight to my inbox.</p>
 
     <form id="feedbackForm">
       <div>
         <label for="mail">Your mail address</label>
-        <input type="mail" id="mail" name="mail" placeholder="you@example.com" required>
+        <input type="email" id="mail" name="mail" placeholder="you@example.com" required>
       </div>
 
       <div>
@@ -219,7 +223,7 @@
         <textarea id="feedback" name="feedback" placeholder="Write a message..." required></textarea>
       </div>
 
-      <button type="submit" id="submitBtn">Send</button>
+      <button type="submit" id="submitBtn">Send feedback</button>
 
       <div class="status" id="statusBox"></div>
     </form>
