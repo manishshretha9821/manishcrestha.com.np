@@ -56,14 +56,14 @@
   h1 span { color: var(--coral); }
   p.sub { font-size: 1rem; line-height: 1.5; color: #4a4a4a; margin: 0 0 26px; }
   form { display: flex; flex-direction: column; gap: 18px; }
-  input[type="email"], textarea {
+  input[type="text"], textarea {
     width: 100%; font-family: 'Nunito', sans-serif; font-size: 1rem;
     padding: 12px 14px; border: 2.5px solid var(--ink);
     border-radius: 14px; background: var(--cream); resize: vertical;
     transition: box-shadow 0.15s ease, transform 0.15s ease;
   }
   textarea { min-height: 120px; }
-  input[type="email"]:focus, textarea:focus {
+  input[type="text"]:focus, textarea:focus {
     outline: none; box-shadow: 3px 3px 0 var(--sky);
     transform: translate(-1px, -1px);
   }
@@ -94,12 +94,12 @@
 
 <div class="wrap">
   <div class="card">
-    <span class="tag">Manish DM</span>
+    <span class="tag">Feedback</span>
     <h1>Got <span>something</span> to say?</h1>
-    <p class="sub"> </p>
+ 
 
     <form id="feedbackForm">
-      <input type="email" id="mail" name="mail" placeholder="Your mail address" required>
+      <input type="text" id="mail" name="mail" placeholder="Your mail address / Your WhatsApp number" required>
       <textarea id="feedback" name="feedback" placeholder="Write your message..." required></textarea>
       <button type="submit" id="submitBtn">Send</button>
       <div class="status" id="statusBox"></div>
