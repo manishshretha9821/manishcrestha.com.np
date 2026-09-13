@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inbox — Website Messages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1a1a;
+    --paper:#fff7ec;
+    --coral:#ff6b5e;
+    --sky:#5ec8f0;
+    --yellow:#ffd23f;
+    --card:#ffffff;
+    --shadow: 6px 6px 0 var(--ink);
+    --shadow-sm: 4px 4px 0 var(--ink);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 12% 20%, rgba(94,200,240,0.25) 0, transparent 40%),
+      radial-gradient(circle at 88% 12%, rgba(255,210,63,0.3) 0, transparent 38%),
+      radial-gradient(circle at 90% 85%, rgba(255,107,94,0.22) 0, transparent 42%),
+      var(--paper);
+    font-family:'Nunito', sans-serif;
+    color:var(--ink);
+    padding: 28px 16px 60px;
+  }
+  .wrap{ max-width: 720px; margin: 0 auto; }
+
+  header{
+    background:var(--card);
+    border:3px solid var(--ink);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    padding:20px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+  }
+  h1{
+    font-family:'Baloo 2', sans-serif;
+    font-size:1.7rem;
+    margin:0;
+    line-height:1.1;
+  }
+  .sub{ margin:4px 0 0; font-size:0.92rem; color:#555; font-weight:600; }
+  .status{
+    display:flex; align-items:center; gap:8px;
+    font-weight:800; font-size:0.85rem;
+    background:var(--yellow);
+    border:2.5px solid var(--ink);
+    border-radius:999px;
+    padding:6px 14px;
+    white-space:nowrap;
+  }
+  .dot{
+    width:9px; height:9px; border-radius:50%;
+    background:#2fbf50;
+    box-shadow:0 0 0 0 rgba(47,191,80,0.6);
+    animation:pulse 1.8s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(47,191,80,0.55); }
+    70%{ box-shadow:0 0 0 7px rgba(47,191,80,0); }
+    100%{ box-shadow:0 0 0 0 rgba(47,191,80,0); }
+  }
+
+  .toolbar{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:14px; gap:10px; flex-wrap:wrap;
+  }
+  .count{ font-weight:800; font-family:'Baloo 2', sans-serif; font-size:1.05rem; }
+  button#refreshBtn{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:0.9rem;
+    background:var(--sky);
+    border:2.5px solid var(--ink);
+    border-radius:12px;
+    padding:8px 16px;
+    cursor:pointer;
+    box-shadow:var(--shadow-sm);
+    transition: transform .08s ease;
+  }
+  button#refreshBtn:active{ transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); }
+
+  #list{ display:flex; flex-direction:column; gap:14px; }
+
+  .card{
+    background:var(--card);
+    border:3px solid var(--ink);
+    border-radius:18px;
+    box-shadow:var(--shadow-sm);
+    padding:16px 18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:8px;
+    background:var(--accent, var(--coral));
+  }
+  .card{ padding-left:24px; }
+  .row-top{
+    display:flex; justify-content:space-between; align-items:baseline;
+    gap:10px; flex-wrap:wrap; margin-bottom:6px;
+  }
+  .time{ font-size:0.8rem; font-weight:700; color:#777; }
+  .contact{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    background:#f1f1f1;
+    border:2px solid var(--ink);
+    border-radius:8px;
+    padding:2px 10px;
+  }
+  .msg{ font-size:1.02rem; font-weight:600; line-height:1.45; word-break:break-word; }
+
+  .empty, .error{
+    background:var(--card);
+    border:3px dashed var(--ink);
+    border-radius:18px;
+    padding:34px 20px;
+    text-align:center;
+    font-weight:700;
+    color:#555;
+  }
+  .error{ border-style:solid; background:#fff0ee; }
+
+  footer{
+    text-align:center; margin-top:26px; font-size:0.8rem; color:#888; font-weight:700;
+  }
+  footer span{ color:var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Website Messages</h1>
+      <p class="sub">Live feed from your contact form</p>
+    </div>
+    <div class="status"><span class="dot"></span> Auto-updating</div>
+  </header>
+
+  <div class="toolbar">
+    <div class="count" id="countLabel">Loading…</div>
+    <button id="refreshBtn" onclick="loadData()">Refresh now</button>
+  </div>
+
+  <div id="list"><div class="empty">Fetching messages…</div></div>
+
+  <footer>Last checked: <span id="lastChecked">—</span> · refreshes every 20s</footer>
+</div>
+
+<script>
+  const SHEET_ID = "1chsdo5-IX9T3hOQxbDfDBFcxoJPa2N1Ly6qU5CK7bL0";
+  const GID = "0";
+  const ACCENTS = ["#ff6b5e", "#5ec8f0", "#ffd23f"];
+  let refreshTimer = null;
+
+  function fmtTime(t){
+    if(!t) return "";
+    return t;
+  }
+
+  function renderRows(rows){
+    const list = document.getElementById('list');
+    const countLabel = document.getElementById('countLabel');
+
+    if(!rows || rows.length === 0){
+      list.innerHTML = '<div class="empty">No messages yet — new submissions will show up here automatically.</div>';
+      countLabel.textContent = "0 messages";
+      return;
+    }
+
+    countLabel.textContent = rows.length + (rows.length === 1 ? " message" : " messages");
+
+    // Most recent first
+    const ordered = rows.slice().reverse();
+
+    list.innerHTML = ordered.map((r, i) => {
+      const accent = ACCENTS[i % ACCENTS.length];
+      const time = r.c[0] ? (r.c[0].f || r.c[0].v || "") : "";
+      const contact = r.c[1] ? (r.c[1].f || r.c[1].v || "") : "";
+      const message = r.c[2] ? (r.c[2].f || r.c[2].v || "") : "";
+      return `<div class="card" style="--accent:${accent}">
+        <div class="row-top">
+          <span class="time">${escapeHtml(String(time))}</span>
+          <span class="contact">${escapeHtml(String(contact))}</span>
+        </div>
+        <div class="msg">${escapeHtml(String(message))}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function escapeHtml(str){
+    return str.replace(/[&<>"']/g, m => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[m]));
+  }
+
+  function showError(msg){
+    document.getElementById('list').innerHTML = `<div class="error">${escapeHtml(msg)}</div>`;
+    document.getElementById('countLabel').textContent = "—";
+  }
+
+  // JSONP callback used by the Google Visualization API response
+  window.__handleSheetData = function(res){
+    try{
+      if(res.status === 'error'){
+        showError("Couldn't read the sheet. It may need to be set to \"Anyone with the link can view\".");
+        return;
+      }
+      const rows = res.table.rows.filter(r => r.c && r.c.some(c => c && (c.v !== null && c.v !== undefined && c.v !== "")));
+      renderRows(rows);
+    }catch(e){
+      showError("Something went wrong reading the sheet data.");
+    }
+    document.getElementById('lastChecked').textContent = new Date().toLocaleTimeString();
+  };
+
+  function loadData(){
+    // Remove any previous loader script to avoid buildup
+    const old = document.getElementById('sheetLoader');
+    if(old) old.remove();
+
+    const script = document.createElement('script');
+    script.id = 'sheetLoader';
+    script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:__handleSheetData&gid=${GID}&_=${Date.now()}`;
+    script.onerror = () => showError("Couldn't reach the sheet. Check your connection and that the sheet is shared as \"Anyone with the link can view\".");
+    document.body.appendChild(script);
+  }
+
+  loadData();
+  refreshTimer = setInterval(loadData, 20000);
+</script>
+</body>
+</html>
