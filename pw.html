@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Sheet Live View</title>
+<style>
+  body{font-family:Arial,sans-serif;margin:0;background:#f5f6f8;color:#222}
+  .wrap{max-width:1400px;margin:20px auto;padding:0 15px}
+  h1{font-size:24px;margin-bottom:6px}
+  #status{font-size:13px;color:#666;margin-bottom:15px}
+  .table-wrap{background:white;border-radius:10px;overflow:auto;box-shadow:0 2px 10px #0001}
+  table{border-collapse:collapse;width:100%;min-width:600px}
+  th,td{padding:10px 12px;border-bottom:1px solid #ddd;text-align:left}
+  th{background:#f0f2f5;position:sticky;top:0;z-index:1}
+  tr:hover td{background:#fafafa}
+  .error{padding:20px;color:#b00020}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Live Google Sheet</h1>
+  <div id="status">Loading...</div>
+  <div class="table-wrap">
+    <table id="sheetTable"></table>
+  </div>
+</div>
+
+<script>
+const SHEET_ID = "19uDkBf43rqG8i0TeuLRUmyJIB6WfYXSa";
+const GID = "1427188598";
+const REFRESH_MS = 30000; // 30 seconds
+
+function getGvizUrl() {
+  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}&t=${Date.now()}`;
+}
+
+function cleanValue(v) {
+  if (v === null || v === undefined) return "";
+  return String(v);
+}
+
+async function loadSheet() {
+  const status = document.getElementById("status");
+  try {
+    status.textContent = "Updating...";
+    const response = await fetch(getGvizUrl(), {cache:"no-store"});
+    if (!response.ok) throw new Error("Google Sheet could not be loaded.");
+
+    const text = await response.text();
+    const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
+    if (!match) throw new Error("Invalid Google Sheet response.");
+
+    const data = JSON.parse(match[1]);
+    const table = data.table;
+    const html = document.getElementById("sheetTable");
+
+    let out = "<thead><tr>";
+    table.cols.forEach(col => {
+      out += `<th>${escapeHtml(col.label || "")}</th>`;
+    });
+    out += "</tr></thead><tbody>";
+
+    table.rows.forEach(row => {
+      out += "<tr>";
+      table.cols.forEach((_, i) => {
+        const cell = row.c && row.c[i] ? row.c[i] : null;
+        out += `<td>${escapeHtml(cell ? (cell.f ?? cell.v ?? "") : "")}</td>`;
+      });
+      out += "</tr>";
+    });
+
+    out += "</tbody>";
+    html.innerHTML = out;
+
+    status.textContent =
+      "Last updated: " + new Date().toLocaleString() +
+      " • Auto-refresh: every 30 seconds";
+  } catch (err) {
+    status.textContent = "Could not update the Sheet.";
+    document.getElementById("sheetTable").innerHTML =
+      `<tbody><tr><td class="error">${escapeHtml(err.message)}</td></tr></tbody>`;
+  }
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+loadSheet();
+setInterval(loadSheet, REFRESH_MS);
+</script>
+</body>
+</html>
