@@ -252,7 +252,7 @@
 
 <script>
 /* ---------- Settings ---------- */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-n7LosEXWB4q2nsHQC582MG-kEsx0DU84m549Ai1BF8DwQ8LlFJeBGXXyzoQzWKg/exec"; // the Apps Script /exec URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFYuFAoxyuyLywwMBnY4wZQzadCrrNbnneaCmM8wP6--_JAN5-7fCKUuxC5vQ-4lz_jQ/exec"; // the Apps Script /exec URL
 const MAX_MB = 200;                               // keep in sync with Code.gs
 const DIRECT_MAX = 15 * 1024 * 1024;              // keep in sync with Code.gs
 /* ------------------------------- */
@@ -367,7 +367,7 @@ function renderList() {
 
 async function loadFiles() {
   if (!configured) {
-    $("list").replaceChildren(el("p", "note err", "This page isn’t connected to Google Drive yet. Add your Apps Script web app URL to SCRIPT_URL in index.html."));
+    $("list").replaceChildren(el("p", "note err", "This page isn’t connected to Google Drive yet. Add your Apps Script web app URL to SCRIPT_URL in fileshare.html."));
     return;
   }
   try {
