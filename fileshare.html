@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Share files</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ground: #EDF0F4;
+    --panel: #FFFFFF;
+    --ink: #16233B;
+    --muted: #55657D;
+    --line: #CBD3DF;
+    --accent: #2438F0;
+    --accent-deep: #1A29B8;
+    --on-accent: #FFFFFF;
+    --ok: #0F7A57;
+    --err: #B3261E;
+    --head: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+    --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0E1524;
+      --panel: #162036;
+      --ink: #E7ECF6;
+      --muted: #9AA9C2;
+      --line: #28365A;
+      --accent: #7F8CFF;
+      --accent-deep: #6573F2;
+      --on-accent: #0B1020;
+      --ok: #4FD1A1;
+      --err: #FF8A80;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 400 1rem/1.5 var(--body);
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 32px clamp(16px, 4vw, 48px) 72px; }
+
+  header { margin-bottom: 32px; }
+  h1 {
+    font: 800 clamp(2.6rem, 7vw, 5rem)/0.95 var(--head);
+    letter-spacing: -0.035em;
+    margin: 0 0 14px;
+  }
+  header p { margin: 0; max-width: 52ch; color: var(--muted); font-size: 1.05rem; }
+
+  .grid { display: grid; gap: 28px; grid-template-columns: 1fr; }
+  @media (min-width: 920px) {
+    .grid { grid-template-columns: minmax(320px, 5fr) 7fr; align-items: start; }
+    .upload { position: sticky; top: 24px; }
+  }
+
+  /* Drop zone */
+  .drop {
+    position: relative;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    min-height: 340px;
+    padding: 34px 30px;
+    border-radius: 28px;
+    background: var(--accent);
+    color: var(--on-accent);
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color .15s, transform .15s;
+  }
+  .drop::before {
+    content: "";
+    position: absolute; inset: 14px;
+    border: 2px dashed currentColor; opacity: .45;
+    border-radius: 18px;
+    transition: opacity .15s;
+    pointer-events: none;
+  }
+  .drop.over { background: var(--accent-deep); transform: scale(1.015); }
+  .drop.over::before { opacity: .9; border-style: solid; }
+  .drop:focus-within { outline: 3px solid var(--ink); outline-offset: 4px; }
+  .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .drop strong {
+    font: 800 clamp(2.2rem, 4.4vw, 3.3rem)/0.98 var(--head);
+    letter-spacing: -0.03em;
+    position: relative;
+  }
+  .drop span { position: relative; margin-top: 12px; max-width: 30ch; opacity: .9; }
+
+  /* Upload queue */
+  .queue { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+  .queue li {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .q-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .q-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .q-status { font-size: .875rem; color: var(--muted); white-space: nowrap; }
+  .q-status.ok { color: var(--ok); }
+  .q-status.err { color: var(--err); }
+  .track { height: 6px; border-radius: 6px; background: var(--ground); margin-top: 10px; overflow: hidden; }
+  .fill { height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); transition: transform .25s; }
+  .q-retry { margin-top: 8px; }
+
+  /* File list */
+  .files {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    overflow: hidden;
+  }
+  .files-head {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .files-head h2 { margin: 0; font: 800 1.5rem/1 var(--head); letter-spacing: -0.02em; }
+  .files-head h2 small { font: 400 .95rem var(--body); color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+  .tools { display: flex; gap: 8px; flex: 1 1 220px; justify-content: flex-end; }
+  input[type=search] {
+    flex: 1 1 140px; min-width: 0; max-width: 260px;
+    font: inherit; color: inherit;
+    background: var(--ground); border: 1px solid var(--line);
+    border-radius: 10px; padding: 8px 12px;
+  }
+  button, .btn {
+    font: 500 .95rem var(--body);
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    line-height: 1.3;
+  }
+  button:hover, .btn:hover { border-color: var(--ink); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn.primary:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
+  button:focus-visible, .btn:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  .rows { list-style: none; margin: 0; padding: 0; }
+  .row {
+    display: grid; grid-template-columns: 48px 1fr auto; gap: 14px; align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .row:last-child { border-bottom: 0; }
+  .ext {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--ground);
+    display: grid; place-items: center;
+    font: 800 .8rem var(--head); color: var(--accent);
+  }
+  .r-name { font-weight: 500; overflow-wrap: anywhere; line-height: 1.3; }
+  .r-meta { font-size: .875rem; color: var(--muted); }
+  .r-act { display: flex; gap: 8px; align-items: center; }
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 48px 1fr; }
+    .r-act { grid-column: 1 / -1; }
+    .r-act .btn { flex: 1; text-align: center; }
+  }
+  .note { padding: 36px 24px; color: var(--muted); text-align: center; }
+  .note.err { color: var(--err); }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Share files</h1>
+    <p>Drop any file below and it goes straight to the shared folder. Everyone who opens this page can see the list and download what they need.</p>
+  </header>
+
+  <div class="grid">
+    <section class="upload" aria-label="Upload">
+      <label class="drop" id="drop">
+        <input type="file" id="file" multiple>
+        <strong>Drop files here</strong>
+        <span>or tap to choose. Any file type, up to <b id="maxmb">200</b> MB each.</span>
+      </label>
+      <ul class="queue" id="queue" aria-live="polite"></ul>
+    </section>
+
+    <section class="files" aria-label="Shared files">
+      <div class="files-head">
+        <h2>Shared files <small id="count"></small></h2>
+        <div class="tools">
+          <label class="sr" for="q">Search files</label>
+          <input type="search" id="q" placeholder="Search files">
+          <button type="button" id="refresh">Refresh</button>
+        </div>
+      </div>
+      <div id="list"><p class="note">Loading files…</p></div>
+    </section>
+  </div>
+</div>
+
+<script>
+/* ---------- Settings ---------- */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-n7LosEXWB4q2nsHQC582MG-kEsx0DU84m549Ai1BF8DwQ8LlFJeBGXXyzoQzWKg/exec"; // the Apps Script /exec URL
+const MAX_MB = 200;                               // keep in sync with Code.gs
+/* ------------------------------- */
+
+const CHUNK = 3 * 1024 * 1024; // must be a multiple of 256 KB
+const $ = id => document.getElementById(id);
+const configured = /^https:\/\/script\.google\.com\//.test(SCRIPT_URL);
+let allFiles = [];
+let uploading = 0;
+
+$("maxmb").textContent = MAX_MB;
+
+/* ---------- helpers ---------- */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const toBase64 = blob => new Promise((res, rej) => {
+  const r = new FileReader();
+  r.onload = () => res(String(r.result).split(",")[1]);
+  r.onerror = () => rej(r.error);
+  r.readAsDataURL(blob);
+});
+function fmtSize(n) {
+  if (n == null) return "";
+  if (n < 1024) return n + " B";
+  const u = ["KB", "MB", "GB"]; let i = -1;
+  do { n /= 1024; i++; } while (n >= 1024 && i < 2);
+  return (n >= 10 ? n.toFixed(0) : n.toFixed(1)) + " " + u[i];
+}
+const fmtDate = t => new Date(t).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+function extOf(name) {
+  const m = /\.([A-Za-z0-9]{1,4})$/.exec(name);
+  return m ? m[1].toLowerCase() : "file";
+}
+async function api(body) {
+  const opts = body ? { method: "POST", body: JSON.stringify(body) } : {};
+  const url = body ? SCRIPT_URL : SCRIPT_URL + "?t=" + Date.now();
+  const r = await fetch(url, opts);
+  let j;
+  try { j = await r.json(); }
+  catch (e) { throw new Error("Unexpected reply. Check that the web app is deployed with access set to Anyone."); }
+  if (j.error) throw new Error(j.error);
+  return j;
+}
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+/* ---------- file list ---------- */
+function renderList() {
+  const term = $("q").value.trim().toLowerCase();
+  const files = allFiles.filter(f => f.name.toLowerCase().includes(term));
+  const box = $("list");
+  box.replaceChildren();
+  $("count").textContent = allFiles.length ? "(" + allFiles.length + ")" : "";
+
+  if (!files.length) {
+    box.append(el("p", "note", allFiles.length ? "No files match your search." : "Nothing shared yet. Drop the first file."));
+    return;
+  }
+  const ul = el("ul", "rows");
+  for (const f of files) {
+    const li = el("li", "row");
+    li.append(el("div", "ext", extOf(f.name)));
+
+    const info = el("div");
+    info.append(el("div", "r-name", f.name));
+    info.append(el("div", "r-meta", [fmtSize(f.size), fmtDate(f.modified)].filter(Boolean).join(", ")));
+    li.append(info);
+
+    const act = el("div", "r-act");
+    const dl = el("a", "btn primary", "Download");
+    dl.href = "https://drive.google.com/uc?export=download&id=" + encodeURIComponent(f.id);
+    const open = el("a", "btn", "Open");
+    open.href = "https://drive.google.com/file/d/" + encodeURIComponent(f.id) + "/view";
+    open.target = "_blank"; open.rel = "noopener";
+    act.append(dl, open);
+    li.append(act);
+    ul.append(li);
+  }
+  box.append(ul);
+}
+
+async function loadFiles() {
+  if (!configured) {
+    $("list").replaceChildren(el("p", "note err", "This page isn’t connected to Google Drive yet. Add your Apps Script web app URL to SCRIPT_URL in index.html."));
+    return;
+  }
+  try {
+    const j = await api();
+    allFiles = j.files || [];
+    renderList();
+  } catch (e) {
+    if (!allFiles.length) $("list").replaceChildren(el("p", "note err", "Couldn’t load the files: " + e.message));
+  }
+}
+
+/* ---------- uploads ---------- */
+const pending = [];
+let running = false;
+
+function addToQueue(fileList) {
+  for (const file of fileList) {
+    const li = el("li");
+    const top = el("div", "q-top");
+    const name = el("span", "q-name", file.name);
+    name.title = file.name;
+    const status = el("span", "q-status", "Waiting");
+    top.append(name, status);
+    const track = el("div", "track");
+    const fill = el("div", "fill");
+    track.append(fill);
+    li.append(top, track);
+    $("queue").append(li);
+    const item = { file, li, status, fill, track };
+
+    if (!configured) { fail(item, "Not connected to Google Drive yet"); continue; }
+    if (file.size === 0) { fail(item, "File is empty"); continue; }
+    if (file.size > MAX_MB * 1024 * 1024) { fail(item, "Larger than " + MAX_MB + " MB"); continue; }
+    pending.push(item);
+  }
+  run();
+}
+
+function fail(item, msg) {
+  item.status.textContent = msg;
+  item.status.className = "q-status err";
+  if (!item.li.querySelector(".q-retry") && item.file.size > 0 && item.file.size <= MAX_MB * 1024 * 1024 && configured) {
+    const b = el("button", "q-retry", "Try again");
+    b.type = "button";
+    b.onclick = () => {
+      b.remove();
+      item.status.className = "q-status"; item.status.textContent = "Waiting";
+      item.fill.style.transform = "scaleX(0)";
+      pending.push(item); run();
+    };
+    item.li.append(b);
+  } else {
+    setTimeout(() => item.li.remove(), 6000);
+  }
+}
+
+async function run() {
+  if (running) return;
+  running = true;
+  while (pending.length) {
+    const item = pending.shift();
+    uploading++;
+    try {
+      await uploadOne(item);
+      item.status.textContent = "Uploaded";
+      item.status.className = "q-status ok";
+      item.fill.style.transform = "scaleX(1)";
+      setTimeout(() => item.li.remove(), 6000);
+      loadFiles();
+    } catch (e) {
+      fail(item, e.message || "Upload failed");
+    }
+    uploading--;
+  }
+  running = false;
+}
+
+async function uploadOne(item) {
+  const file = item.file;
+  item.status.textContent = "Starting…";
+  const s = await api({
+    action: "start",
+    name: file.name,
+    mime: file.type || "application/octet-stream",
+    size: file.size
+  });
+  let offset = 0;
+  while (offset < file.size) {
+    const end = Math.min(offset + CHUNK, file.size);
+    const data = await toBase64(file.slice(offset, end));
+    let res, tries = 0;
+    for (;;) {
+      try {
+        res = await api({ action: "chunk", sessionUrl: s.sessionUrl, start: offset, total: file.size, data });
+        break;
+      } catch (e) {
+        if (++tries >= 3) throw e;
+        await sleep(1000 * tries);
+      }
+    }
+    offset = end;
+    const pct = Math.round(offset / file.size * 100);
+    item.fill.style.transform = "scaleX(" + (offset / file.size) + ")";
+    item.status.textContent = "Uploading " + pct + "%";
+    if (res.done) return;
+  }
+}
+
+/* ---------- events ---------- */
+const drop = $("drop");
+$("file").addEventListener("change", e => { addToQueue([...e.target.files]); e.target.value = ""; });
+
+let depth = 0;
+document.addEventListener("dragenter", e => { e.preventDefault(); depth++; drop.classList.add("over"); });
+document.addEventListener("dragleave", () => { if (--depth <= 0) { depth = 0; drop.classList.remove("over"); } });
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => {
+  e.preventDefault(); depth = 0; drop.classList.remove("over");
+  if (e.dataTransfer && e.dataTransfer.files.length) addToQueue([...e.dataTransfer.files]);
+});
+
+$("q").addEventListener("input", renderList);
+$("refresh").addEventListener("click", loadFiles);
+window.addEventListener("beforeunload", e => { if (uploading) { e.preventDefault(); e.returnValue = ""; } });
+document.addEventListener("visibilitychange", () => { if (!document.hidden) loadFiles(); });
+setInterval(() => { if (!document.hidden && !uploading) loadFiles(); }, 60000);
+
+loadFiles();
+</script>
+</body>
+</html>
