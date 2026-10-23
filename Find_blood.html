@@ -139,7 +139,7 @@ select{appearance:none;cursor:pointer}
       <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
       <div class="error-msg" id="errorMsg">Couldn't send that &mdash; check your connection and try again.</div>
     </form>
-    <button type="button" class="link-btn" id="haveReg" style="margin-bottom:26px">Already registered? View the donor list</button>
+    <a class="link-btn" id="haveReg" href="https://manishcrestha.com.np/heros" target="_blank" rel="noopener" style="margin-bottom:26px">Already registered? View the donor list</a>
   </div>
   <div class="state" id="successView">
     <div class="success-badge"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -369,10 +369,6 @@ function renderList() {
 lsearch.addEventListener('input', renderList);
 
 document.getElementById('viewListBtn').addEventListener('click', () => {
-  let em = ''; try { em = localStorage.getItem('bloodEmail') || ''; } catch (x) {}
-  em ? loadList(em) : show('gate');
-});
-document.getElementById('haveReg').addEventListener('click', () => {
   let em = ''; try { em = localStorage.getItem('bloodEmail') || ''; } catch (x) {}
   em ? loadList(em) : show('gate');
 });
