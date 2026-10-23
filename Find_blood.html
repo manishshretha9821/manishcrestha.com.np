@@ -3,348 +3,246 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registration</title>
+<title>Blood Donor Registration | Manish</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --coral:#FF6B6B;
-    --coral-deep:#E8524F;
-    --teal:#17A398;
-    --yellow:#FFC857;
-    --cream:#FFF6EC;
-    --ink:#322D52;
-    --ink-soft:#8B8698;
-    --line:#F0E4D3;
-  }
-
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--cream);
-    color:var(--ink);
-    font-family:'Nunito',sans-serif;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:40px 16px;
-    position:relative;
-    overflow-x:hidden;
-  }
-
-  .blob{
-    position:fixed;
-    border-radius:50%;
-    filter:blur(6px);
-    opacity:0.35;
-    z-index:0;
-  }
-  .blob1{width:280px;height:280px;background:var(--teal);top:-100px;left:-100px;}
-  .blob2{width:220px;height:220px;background:var(--yellow);bottom:-80px;right:-80px;}
-  .blob3{width:160px;height:160px;background:var(--coral);top:40%;right:-100px;opacity:0.25;}
-
-  .card{
-    width:100%;
-    max-width:520px;
-    background:#fff;
-    border-radius:32px;
-    box-shadow:0 24px 60px -20px rgba(50,45,82,0.25);
-    position:relative;
-    z-index:1;
-    overflow:hidden;
-  }
-
-  .card-head{
-    padding:38px 40px 20px;
-    text-align:center;
-  }
-
-  .badge{
-    width:64px;height:64px;
-    background:linear-gradient(135deg, var(--coral), var(--coral-deep));
-    border-radius:50% 50% 50% 0;
-    transform:rotate(45deg);
-    display:flex;align-items:center;justify-content:center;
-    margin:0 auto 22px;
-    box-shadow:0 10px 24px -8px rgba(232,82,79,0.55);
-  }
-  .badge svg{transform:rotate(-45deg);width:28px;height:28px;}
-
-  h1{
-    font-family:'Baloo 2',sans-serif;
-    font-weight:700;
-    font-size:28px;
-    line-height:1.2;
-    margin:0 0 8px;
-    color:var(--ink);
-  }
-
-  .sub{
-    color:var(--ink-soft);
-    font-size:14.5px;
-    line-height:1.5;
-    margin:0;
-    font-weight:600;
-  }
-
-  form{padding:12px 40px 36px;}
-
-  .field{
-    margin-bottom:18px;
-    border-radius:16px;
-    background:var(--cream);
-    padding:12px 16px;
-    border:2px solid transparent;
-    transition:border-color 0.15s ease, background 0.15s ease;
-  }
-  .field:focus-within{
-    border-color:var(--c-accent, var(--teal));
-    background:#fff;
-  }
-  .field:nth-of-type(6n+1){--c-accent:var(--coral);}
-  .field:nth-of-type(6n+2){--c-accent:var(--teal);}
-  .field:nth-of-type(6n+3){--c-accent:var(--yellow);}
-  .field:nth-of-type(6n+4){--c-accent:var(--coral);}
-  .field:nth-of-type(6n+5){--c-accent:var(--teal);}
-  .field:nth-of-type(6n+6){--c-accent:var(--yellow);}
-
-  label{
-    display:block;
-    font-size:12px;
-    font-weight:800;
-    letter-spacing:0.01em;
-    margin-bottom:4px;
-    color:var(--ink-soft);
-    text-transform:uppercase;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="date"],
-  select{
-    width:100%;
-    padding:4px 0 2px;
-    border:none;
-    background:transparent;
-    font-family:'Nunito',sans-serif;
-    font-weight:700;
-    font-size:16px;
-    color:var(--ink);
-  }
-
-  input:focus,select:focus{outline:none;}
-  select{appearance:none;cursor:pointer;}
-
-  .select-wrap{position:relative;}
-  .select-wrap::after{
-    content:'▾';
-    position:absolute;
-    right:0; top:2px;
-    color:var(--ink-soft);
-    font-size:14px;
-    pointer-events:none;
-  }
-
-  .submit-btn{
-    width:100%;
-    font-family:'Baloo 2',sans-serif;
-    font-weight:700;
-    font-size:17px;
-    padding:15px 26px;
-    margin-top:8px;
-    background:linear-gradient(135deg, var(--coral), var(--coral-deep));
-    color:#fff;
-    border:none;
-    border-radius:16px;
-    cursor:pointer;
-    box-shadow:0 12px 24px -8px rgba(232,82,79,0.5);
-    transition:transform 0.12s ease, box-shadow 0.12s ease;
-  }
-  .submit-btn:hover{transform:translateY(-2px);box-shadow:0 16px 28px -8px rgba(232,82,79,0.6);}
-  .submit-btn:active{transform:translateY(0);}
-  .submit-btn:disabled{opacity:0.6;cursor:default;transform:none;}
-
-  .state{
-    display:none;
-    padding:60px 40px;
-    text-align:center;
-  }
-  .state.show{display:block;}
-  .success-badge{
-    width:80px;height:80px;
-    background:linear-gradient(135deg, var(--teal), #0e8177);
-    border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    margin:0 auto 20px;
-    box-shadow:0 12px 28px -8px rgba(23,163,152,0.5);
-  }
-  .success-badge svg{width:36px;height:36px;}
-  .state h2{
-    font-family:'Baloo 2',sans-serif;
-    font-weight:700;
-    font-size:24px;
-    margin:0 0 8px;
-    color:var(--ink);
-  }
-  .state p{color:var(--ink-soft);font-size:14.5px;font-weight:600;margin:0 0 24px;}
-  .state .submit-btn{
-    background:transparent;
-    color:var(--teal);
-    box-shadow:none;
-    border:2px solid var(--teal);
-    width:auto;
-    padding:12px 28px;
-  }
-  .state .submit-btn:hover{background:var(--teal);color:#fff;}
-
-  .error-msg{
-    display:none;
-    font-size:13px;
-    font-weight:700;
-    color:var(--coral-deep);
-    margin-top:6px;
-    text-align:center;
-  }
-  .error-msg.show{display:block;}
-
-  @media (max-width:480px){
-    .card-head, form{padding-left:26px;padding-right:26px;}
-    h1{font-size:24px;}
-  }
+:root{--coral:#FF6B6B;--coral-deep:#E8524F;--teal:#17A398;--yellow:#FFC857;--cream:#FFF6EC;--ink:#322D52;--ink-soft:#8B8698;--e:cubic-bezier(.34,1.56,.64,1)}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(90% 70% at 20% 0,#fff 0,var(--cream) 60%) fixed;color:var(--ink);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:70px 16px 60px;overflow-x:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;touch-action:pan-y}
+.home,.hint{position:fixed;z-index:3;font-weight:800;font-size:14px;border-radius:99px;padding:7px 16px}
+.home{top:16px;left:16px;background:#fff;color:var(--ink);text-decoration:none;box-shadow:0 6px 18px -8px rgba(50,45,82,.35);transition:transform .2s var(--e)}
+.home:hover{transform:translateX(-3px)}
+.hint{left:50%;bottom:14px;translate:-50% 0;background:#ffffffcc;backdrop-filter:blur(6px);color:var(--ink-soft);pointer-events:none;white-space:nowrap}
+.hint b{color:var(--coral-deep)}
+.card{width:100%;max-width:520px;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid #fff;border-radius:32px;box-shadow:0 24px 60px -20px rgba(50,45,82,.3);position:relative;z-index:2;overflow:hidden;animation:pop .9s var(--e) both}
+@keyframes pop{0%{transform:scale(.55) translateY(40px);opacity:0}100%{transform:none;opacity:1}}
+.card.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.card-head{padding:38px 40px 20px;text-align:center}
+.badgebox{position:relative;width:64px;height:64px;margin:0 auto 24px}
+.badge{position:relative;z-index:1;width:64px;height:64px;background:linear-gradient(135deg,var(--coral),var(--coral-deep));border-radius:50% 50% 50% 0;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px -8px rgba(232,82,79,.55);animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(-9px) rotate(45deg)}}
+.badge svg{transform:rotate(-45deg);width:28px;height:28px}
+.badgebox::before{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--coral);opacity:0;animation:ring 3.2s ease-out infinite}
+@keyframes ring{0%{transform:scale(.7);opacity:.6}100%{transform:scale(2);opacity:0}}
+.mini{position:absolute;bottom:50%;border-radius:50%;border:2px solid var(--c);background:color-mix(in srgb,var(--c) 18%,transparent);opacity:0;animation:rise 3.4s ease-in infinite;animation-delay:var(--d)}
+@keyframes rise{0%{transform:translateY(0) scale(.4);opacity:0}15%{opacity:.9}100%{transform:translate(var(--x),-80px) scale(1);opacity:0}}
+h1{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:28px;line-height:1.2;margin:0 0 8px}
+.sub{color:var(--ink-soft);font-size:14.5px;line-height:1.5;margin:0;font-weight:600}
+form{padding:12px 40px 36px}
+.field{margin-bottom:18px;border-radius:16px;background:var(--cream);padding:12px 16px;border:2px solid transparent;transition:border-color .15s,background .15s,box-shadow .25s,transform .25s var(--e);animation:in .6s var(--e) both;animation-delay:calc(.45s + var(--n)*.08s)}
+@keyframes in{from{opacity:0;transform:translateY(22px) scale(.96)}}
+.field:hover{transform:translateY(-2px)}
+.field:focus-within{border-color:var(--ca,var(--teal));background:#fff;box-shadow:0 0 0 5px color-mix(in srgb,var(--ca,var(--teal)) 22%,transparent);transform:translateY(-2px) scale(1.01)}
+.field:nth-of-type(3n+1){--ca:var(--coral)}.field:nth-of-type(3n+2){--ca:var(--teal)}.field:nth-of-type(3n+3){--ca:var(--yellow)}
+label{display:block;font-size:12px;font-weight:800;letter-spacing:.01em;margin-bottom:4px;color:var(--ink-soft);text-transform:uppercase}
+input[type=text],input[type=email],input[type=date],select{width:100%;padding:4px 0 2px;border:none;background:transparent;font-family:'Nunito',sans-serif;font-weight:700;font-size:16px;color:var(--ink)}
+input:focus,select:focus{outline:none}
+select{appearance:none;cursor:pointer}
+.select-wrap{position:relative}
+.select-wrap::after{content:'\25BE';position:absolute;right:16px;top:30px;color:var(--ink-soft);font-size:14px;pointer-events:none}
+.submit-btn{position:relative;overflow:hidden;width:100%;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:17px;padding:15px 26px;margin-top:8px;background:linear-gradient(135deg,var(--coral),var(--coral-deep));color:#fff;border:none;border-radius:16px;cursor:pointer;box-shadow:0 12px 24px -8px rgba(232,82,79,.5);transition:transform .15s var(--e),box-shadow .15s;animation:in .6s var(--e) 1.1s both}
+.submit-btn:hover{transform:translateY(-3px);box-shadow:0 16px 28px -8px rgba(232,82,79,.6)}
+.submit-btn:active{transform:scale(.97)}
+.submit-btn:disabled{opacity:.7;cursor:default;transform:none}
+.rp{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rp .7s ease-out forwards;pointer-events:none}
+@keyframes rp{to{transform:scale(1);opacity:0}}
+.state{display:none;padding:60px 40px;text-align:center}
+.state.show{display:block}
+.success-badge{width:84px;height:84px;background:linear-gradient(135deg,var(--teal),#0e8177);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 12px 28px -8px rgba(23,163,152,.5)}
+.state.show .success-badge{animation:sb .8s var(--e)}
+@keyframes sb{from{transform:scale(0) rotate(-90deg)}}
+.success-badge svg{width:38px;height:38px}
+.success-badge polyline{stroke-dasharray:30;stroke-dashoffset:30}
+.state.show polyline{animation:draw .5s ease-out .4s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.state h2{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:26px;margin:0 0 8px}
+.state p{color:var(--ink-soft);font-size:14.5px;font-weight:600;margin:0 0 24px}
+.state .submit-btn{background:transparent;color:var(--teal);box-shadow:none;border:2px solid var(--teal);width:auto;padding:12px 28px;animation:none}
+.state .submit-btn:hover{background:var(--teal);color:#fff}
+.error-msg{display:none;font-size:13px;font-weight:700;color:var(--coral-deep);margin-top:10px;text-align:center}
+.error-msg.show{display:block}
+@media(max-width:480px){.card-head,form{padding-left:26px;padding-right:26px}h1{font-size:24px}.hint{font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}.hint{display:none}}
 </style>
 </head>
 <body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<a class="home" href="index.html">&larr; Home</a>
+<div class="hint" id="hint">Pop the bubbles! <b id="pops">0</b> popped</div>
 
-<div class="blob blob1"></div>
-<div class="blob blob2"></div>
-<div class="blob blob3"></div>
-
-<div class="card">
+<div class="card" id="card">
   <div id="formView">
     <div class="card-head">
-      <div class="badge">
-        <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C12 2 5 11.5 5 16a7 7 0 0 0 14 0C19 11.5 12 2 12 2z"/></svg>
+      <div class="badgebox">
+        <i class="mini" style="--c:var(--coral);--d:0s;--x:-18px;left:10px;width:12px;height:12px"></i>
+        <i class="mini" style="--c:var(--teal);--d:1.1s;--x:14px;left:38px;width:9px;height:9px"></i>
+        <i class="mini" style="--c:var(--yellow);--d:2.2s;--x:-6px;left:26px;width:14px;height:14px"></i>
+        <div class="badge"><svg viewBox="0 0 24 24" fill="white"><path d="M12 2C12 2 5 11.5 5 16a7 7 0 0 0 14 0C19 11.5 12 2 12 2z"/></svg></div>
       </div>
       <h1>Quick Registration</h1>
-      <p class="sub">Fill in your details below — takes under a minute</p>
+      <p class="sub">Fill in your details below &mdash; takes under a minute</p>
     </div>
-
     <form id="feedbackForm">
-      <div class="field">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" placeholder="Manish Shrestha" required>
-      </div>
-
-      <div class="field">
-        <label for="address">Address</label>
-        <input type="text" id="address" name="address" placeholder="Kathmandu, Nepal" required>
-      </div>
-
-      <div class="field">
-        <label for="contact">Contact Number</label>
-        <input type="text" id="contact" name="contact" placeholder="98XXXXXXXX" required>
-      </div>
-
-      <div class="field">
-        <label for="email">Mail Address</label>
-        <input type="email" id="email" name="email" placeholder="you@example.com" required>
-      </div>
-
-      <div class="field">
-        <label for="dob">Date of Birth</label>
-        <input type="date" id="dob" name="dob" required>
-      </div>
-
-      <div class="field select-wrap">
-        <label for="bloodGroup">Blood Group</label>
+      <div class="field" style="--n:0"><label for="name">Name</label><input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" required></div>
+      <div class="field" style="--n:1"><label for="address">Address</label><input type="text" id="address" name="address" placeholder="Your address" autocomplete="street-address" required></div>
+      <div class="field" style="--n:2"><label for="contact">Contact Number</label><input type="text" id="contact" name="contact" placeholder="98XXXXXXXX" inputmode="tel" autocomplete="tel" required></div>
+      <div class="field" style="--n:3"><label for="email">Mail Address</label><input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required></div>
+      <div class="field" style="--n:4"><label for="dob">Date of Birth</label><input type="date" id="dob" name="dob" required></div>
+      <div class="field select-wrap" style="--n:5"><label for="bloodGroup">Blood Group</label>
         <select id="bloodGroup" name="bloodGroup" required>
           <option value="" disabled selected>Select blood group</option>
-          <option value="A+">A+</option>
-          <option value="A-">A-</option>
-          <option value="B+">B+</option>
-          <option value="B-">B-</option>
-          <option value="AB+">AB+</option>
-          <option value="AB-">AB-</option>
-          <option value="O+">O+</option>
-          <option value="O-">O-</option>
+          <option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option>
+          <option value="AB+">AB+</option><option value="AB-">AB-</option><option value="O+">O+</option><option value="O-">O-</option>
         </select>
       </div>
-
       <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
-      <div class="error-msg" id="errorMsg">Couldn't send that — check your connection and try again.</div>
+      <div class="error-msg" id="errorMsg">Couldn't send that &mdash; check your connection and try again.</div>
     </form>
   </div>
-
   <div class="state" id="successView">
-    <div class="success-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-    </div>
+    <div class="success-badge"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
     <h2>All set!</h2>
-    <p>Thanks — your details have been recorded.</p>
+    <p>Thanks &mdash; your details have been recorded.</p>
     <button class="submit-btn" id="resetBtn">Submit another</button>
   </div>
 </div>
 
 <script>
-  // === CONFIGURE THIS ===
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwox1TGejTfNBeASdL_e-70semzGtgcmHuLLWecshCEpsKMe2G_gIxlKrljH_tKz7cSOw/exec";
-
-  const form = document.getElementById('feedbackForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const errorMsg = document.getElementById('errorMsg');
-  const formView = document.getElementById('formView');
-  const successView = document.getElementById('successView');
-  const resetBtn = document.getElementById('resetBtn');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    errorMsg.classList.remove('show');
-
-    if (SCRIPT_URL.includes('PASTE_YOUR')) {
-      errorMsg.textContent = 'Set SCRIPT_URL in the code first (see setup instructions).';
-      errorMsg.classList.add('show');
-      return;
+// ===== Bubbles =====
+var bubbleBurst=function(){};
+(function(){
+  var cv=document.getElementById('bg'),cx=cv.getContext('2d'),counter=document.getElementById('pops');
+  var calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var COLORS=[[255,107,107],[23,163,152],[255,200,87],[120,130,255]];
+  var W,H,dpr,bubbles=[],parts=[],rings=[],ptr={x:-999,y:-999,down:false},popped=0,last=0;
+  function size(){dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0)}
+  function make(fresh){
+    var r=9+Math.random()*Math.random()*62;
+    return{x:Math.random()*W,y:fresh?H+r+Math.random()*160:Math.random()*H,r:r,vy:.25+(70-r)/70*.75,vx:0,ph:Math.random()*6.3,sw:.2+Math.random()*.5,c:COLORS[Math.random()*COLORS.length|0]};
+  }
+  function fill(){bubbles=[];var n=Math.min(34,Math.max(14,W/42|0));for(var i=0;i<n;i++)bubbles.push(make(false))}
+  function pop(b){
+    var i=bubbles.indexOf(b);if(i<0)return;bubbles.splice(i,1);
+    for(var k=0;k<11;k++){var a=Math.random()*6.3,s=1.4+Math.random()*3.2;parts.push({x:b.x,y:b.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:2+Math.random()*3.5,c:b.c,l:1})}
+    rings.push({x:b.x,y:b.y,r:b.r,c:b.c,l:1});
+    if(!b.tmp)bubbles.push(make(true));
+    popped++;counter.textContent=popped;
+  }
+  function hit(x,y){for(var i=bubbles.length-1;i>=0;i--){var b=bubbles[i];if(Math.hypot(x-b.x,y-b.y)<b.r+6){pop(b);return true}}return false}
+  bubbleBurst=function(x,y,n){
+    if(calm)return;
+    for(var i=0;i<n;i++){var r=7+Math.random()*22,a=-Math.PI/2+(Math.random()-.5)*2.4,s=2+Math.random()*4;
+      bubbles.push({x:x,y:y,r:r,vy:s*Math.abs(Math.sin(a)),vx:Math.cos(a)*s,ph:Math.random()*6.3,sw:.3,c:COLORS[Math.random()*COLORS.length|0],tmp:true})}
+  };
+  function drawBubble(b){
+    var c=b.c,rgb=c.join(','),x=b.x,y=b.y,r=b.r;
+    cx.save();cx.translate(x,y);cx.scale(1+Math.sin(b.ph*1.6)*.04,1-Math.sin(b.ph*1.6)*.04);
+    var g=cx.createRadialGradient(-r*.35,-r*.35,r*.1,0,0,r);
+    g.addColorStop(0,'rgba(255,255,255,.75)');g.addColorStop(.55,'rgba('+rgb+',.12)');g.addColorStop(1,'rgba('+rgb+',.4)');
+    cx.beginPath();cx.arc(0,0,r,0,6.3);cx.fillStyle=g;cx.fill();
+    cx.lineWidth=1.5;cx.strokeStyle='rgba('+rgb+',.55)';cx.stroke();
+    cx.beginPath();cx.ellipse(-r*.4,-r*.45,r*.22,r*.11,-.7,0,6.3);cx.fillStyle='rgba(255,255,255,.85)';cx.fill();
+    cx.restore();
+  }
+  function frame(t){
+    var k=Math.min(2.5,(t-last)/16.7||1);last=t;
+    cx.clearRect(0,0,W,H);
+    for(var i=bubbles.length-1;i>=0;i--){
+      var b=bubbles[i];
+      b.y-=b.vy*k;b.ph+=.02*k;b.x+=(Math.sin(b.ph)*b.sw+b.vx)*k;b.vx*=b.tmp?.99:.95;
+      var dx=b.x-ptr.x,dy=b.y-ptr.y,d=Math.hypot(dx,dy),R=b.r+120;
+      if(d<R&&d>.1){var f=(1-d/R);b.x+=dx/d*f*3.2*k;b.y+=dy/d*f*2.2*k}
+      if(b.x<-b.r)b.x=W+b.r;if(b.x>W+b.r)b.x=-b.r;
+      if(b.y<-b.r-10){if(b.tmp){bubbles.splice(i,1);continue}b.y=H+b.r+10;b.x=Math.random()*W}
+      drawBubble(b);
     }
+    for(var j=rings.length-1;j>=0;j--){var q=rings[j];q.l-=.05*k;q.r+=2.2*k;if(q.l<=0){rings.splice(j,1);continue}
+      cx.beginPath();cx.arc(q.x,q.y,q.r,0,6.3);cx.lineWidth=2;cx.strokeStyle='rgba('+q.c.join(',')+','+q.l*.6+')';cx.stroke()}
+    for(var m=parts.length-1;m>=0;m--){var p=parts[m];p.x+=p.vx*k;p.y+=p.vy*k;p.vy+=.12*k;p.vx*=.98;p.l-=.03*k;if(p.l<=0){parts.splice(m,1);continue}
+      cx.beginPath();cx.arc(p.x,p.y,p.r*p.l,0,6.3);cx.fillStyle='rgba('+p.c.join(',')+','+p.l+')';cx.fill()}
+    requestAnimationFrame(frame);
+  }
+  size();fill();
+  addEventListener('resize',function(){size();fill()});
+  if(calm){bubbles.forEach(drawBubble);return}
+  addEventListener('pointermove',function(e){ptr.x=e.clientX;ptr.y=e.clientY;if(ptr.down&&!e.target.closest('.card'))hit(e.clientX,e.clientY)});
+  addEventListener('pointerdown',function(e){ptr.down=true;ptr.x=e.clientX;ptr.y=e.clientY;if(!e.target.closest('.card,.home'))hit(e.clientX,e.clientY)});
+  addEventListener('pointerup',function(){ptr.down=false});
+  addEventListener('pointerleave',function(){ptr.x=ptr.y=-999;ptr.down=false});
+  requestAnimationFrame(frame);
+})();
 
-    const payload = {
-      timestamp: new Date().toISOString(),
-      name: document.getElementById('name').value,
-      address: document.getElementById('address').value,
-      contact: document.getElementById('contact').value,
-      email: document.getElementById('email').value,
-      dob: document.getElementById('dob').value,
-      bloodGroup: document.getElementById('bloodGroup').value
-    };
+// ===== Form (same Google Sheet connection as before) =====
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwox1TGejTfNBeASdL_e-70semzGtgcmHuLLWecshCEpsKMe2G_gIxlKrljH_tKz7cSOw/exec";
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
+const form = document.getElementById('feedbackForm');
+const submitBtn = document.getElementById('submitBtn');
+const errorMsg = document.getElementById('errorMsg');
+const formView = document.getElementById('formView');
+const successView = document.getElementById('successView');
+const resetBtn = document.getElementById('resetBtn');
+const card = document.getElementById('card');
 
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
-      formView.style.display = 'none';
-      successView.classList.add('show');
-    } catch (err) {
-      errorMsg.textContent = "Couldn't send that — check your connection and try again.";
-      errorMsg.classList.add('show');
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Submit';
-    }
-  });
+// ripple on buttons
+document.addEventListener('pointerdown', function (e) {
+  const b = e.target.closest('.submit-btn'); if (!b) return;
+  const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height) * 2, el = document.createElement('span');
+  el.className = 'rp'; el.style.cssText = 'width:' + s + 'px;height:' + s + 'px;left:' + (e.clientX - r.left - s / 2) + 'px;top:' + (e.clientY - r.top - s / 2) + 'px';
+  b.appendChild(el); setTimeout(function () { el.remove(); }, 750);
+});
 
-  resetBtn.addEventListener('click', () => {
-    form.reset();
-    successView.classList.remove('show');
-    formView.style.display = 'block';
-    errorMsg.classList.remove('show');
-  });
+function fail(msg) {
+  errorMsg.textContent = msg; errorMsg.classList.add('show');
+  card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorMsg.classList.remove('show');
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    name: document.getElementById('name').value,
+    address: document.getElementById('address').value,
+    contact: document.getElementById('contact').value,
+    email: document.getElementById('email').value,
+    dob: document.getElementById('dob').value,
+    bloodGroup: document.getElementById('bloodGroup').value
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    formView.style.display = 'none';
+    successView.classList.add('show');
+    const r = card.getBoundingClientRect();
+    bubbleBurst(r.left + r.width / 2, r.top + r.height / 2, 42);
+  } catch (err) {
+    fail("Couldn't send that \u2014 check your connection and try again.");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
+  }
+});
+
+resetBtn.addEventListener('click', () => {
+  form.reset();
+  successView.classList.remove('show');
+  formView.style.display = 'block';
+  errorMsg.classList.remove('show');
+});
 </script>
-
 </body>
 </html>
