@@ -64,7 +64,8 @@
   }
   .ig-card:nth-child(1){ --accent: var(--coral); }
   .ig-card:nth-child(2){ --accent: var(--sky); }
-  .ig-card:nth-child(3){ --accent: var(--sun); }
+  .ig-card:nth-child(3){ --accent: var(--mint); }
+  .ig-card:nth-child(4){ --accent: var(--sun); }
 
   .ig-thumb{
     position: relative;
@@ -73,7 +74,8 @@
     overflow: hidden;
     background: var(--accent);
   }
-  .ig-thumb img{
+  .ig-thumb img,
+  .ig-thumb video{
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -135,6 +137,36 @@
   }
   .ig-card:hover .ig-arrow{ transform: translateX(3px) rotate(-45deg); }
   .ig-arrow svg{ width: 11px; height: 11px; }
+
+  /* ---------- Video popup ---------- */
+  .vid-modal{
+    position: fixed; inset: 0; z-index: 999;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(43,43,43,0.75);
+    padding: 1.2rem;
+  }
+  .vid-modal.open{ display: flex; }
+  .vid-modal-box{
+    position: relative;
+    width: min(900px, 100%);
+    background: var(--card);
+    border: 3px solid var(--ink);
+    border-radius: 22px;
+    padding: 10px;
+    box-shadow: 0 8px 0 var(--shadow);
+  }
+  .vid-modal-box video{
+    width: 100%; max-height: 78vh;
+    display: block; border-radius: 14px; background: #000;
+  }
+  .vid-close{
+    position: absolute; top: -16px; right: -10px;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--coral); color: var(--ink);
+    border: 3px solid var(--ink);
+    font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 1.1rem;
+    cursor: pointer; line-height: 1;
+  }
 </style>
 </head>
 <body>
@@ -142,7 +174,7 @@
 <section class="ig-block">
   <div class="ig-block-head">
     <h2>Watch the Workflow</h2>
-    <p>tap a card to see it on Instagram</p>
+    <p>tap a card to watch it</p>
   </div>
 
   <div class="ig-grid">
@@ -177,8 +209,67 @@
       </div>
     </a>
 
+    <!-- Card 3 (video) -->
+    <a class="ig-card" href="#" data-video="assets/img/portfolio/workflow/Swami%20on%20ratha.mp4">
+      <div class="ig-thumb">
+        <video src="assets/img/portfolio/workflow/Swami%20on%20ratha.mp4#t=0.5" muted playsinline preload="metadata" aria-hidden="true"></video>
+        <div class="ig-sticker">VIDEO</div>
+        <div class="ig-play">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 3v18l16-9L4 3z" fill="#2B2B2B"/></svg>
+        </div>
+      </div>
+      <div class="ig-caption">
+        <p>Swami on Ratha</p>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#2B2B2B" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+    </a>
+
+    <!-- Card 4 (video) -->
+    <a class="ig-card" href="#" data-video="assets/img/portfolio/workflow/Speed%20Art.mp4">
+      <div class="ig-thumb">
+        <video src="assets/img/portfolio/workflow/Speed%20Art.mp4#t=0.5" muted playsinline preload="metadata" aria-hidden="true"></video>
+        <div class="ig-sticker">SPEED ART</div>
+        <div class="ig-play">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 3v18l16-9L4 3z" fill="#2B2B2B"/></svg>
+        </div>
+      </div>
+      <div class="ig-caption">
+        <p>Speed Art</p>
+        <div class="ig-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#2B2B2B" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+    </a>
+
   </div>
 </section>
+
+<div class="vid-modal" id="vidModal" aria-hidden="true">
+  <div class="vid-modal-box">
+    <button class="vid-close" id="vidClose" aria-label="Close video">&times;</button>
+    <video id="vidPlayer" controls playsinline preload="none"></video>
+  </div>
+</div>
+
+<script>
+(function(){
+  var modal = document.getElementById('vidModal');
+  var player = document.getElementById('vidPlayer');
+  function close(){
+    player.pause(); player.removeAttribute('src'); player.load();
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+  }
+  document.querySelectorAll('.ig-card[data-video]').forEach(function(card){
+    card.addEventListener('click', function(e){
+      e.preventDefault();
+      player.src = card.getAttribute('data-video');
+      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+      player.play().catch(function(){});
+    });
+  });
+  document.getElementById('vidClose').addEventListener('click', close);
+  modal.addEventListener('click', function(e){ if(e.target === modal) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+})();
+</script>
 
 </body>
 </html>
